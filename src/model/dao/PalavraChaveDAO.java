@@ -2,43 +2,56 @@ package model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import model.PalavraChave;
 
 public class PalavraChaveDAO {
+	
 	  private static final String URL = "jdbc:sqlite:vestibular.db";
 
-	    public static void init() {
+	    public void inserir(PalavraChave palavraChave) {
+	        String sql = "INSERT INTO palavras_chave (palavra, descricao, materia, assunto) VALUES (?, ?, ?, ?)";
+
 	        try (Connection conn = DriverManager.getConnection(URL);
-	             Statement stmt = conn.createStatement()) {
-	            // Tabela de matérias
-	            stmt.execute("CREATE TABLE IF NOT EXISTS materias (" +
-	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	                         "nome TEXT NOT NULL)");
-
-	            // Tabela de questões
-	            stmt.execute("CREATE TABLE IF NOT EXISTS questoes (" +
-	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	                         "pergunta TEXT NOT NULL, " +
-	                         "resposta TEXT NOT NULL, " +
-	                         "materia TEXT NOT NULL, " +
-	                         "assunto TEXT NOT NULL)");
-
-	            // Tabela de resumos
-	            stmt.execute("CREATE TABLE IF NOT EXISTS resumos (" +
-	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	                         "materia TEXT NOT NULL, " +
-	                         "texto TEXT NOT NULL)");
-
-	            // Tabela de palavras-chave
-	            stmt.execute("CREATE TABLE IF NOT EXISTS palavras_chave (" +
-	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	                         "palavra TEXT NOT NULL, " +
-	                         "descricao TEXT, " +
-	                         "materia TEXT NOT NULL, " +
-	                         "assunto TEXT NOT NULL)");
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, palavraChave.getPalavra());
+	            pstmt.setString(2, palavraChave.getDescricao());
+	            pstmt.setString(3, palavraChave.getMateria());
+	            pstmt.setString(4, palavraChave.getAssunto());
+	            pstmt.executeUpdate();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
+	    }
+
+	    public List<PalavraChave> listarPorMateria(String materia) {
+	        List<PalavraChave> palavrasChave = new ArrayList<>();
+	        String sql = "SELECT * FROM palavras_chave WHERE materia = ?";
+
+	        try (Connection conn = DriverManager.getConnection(URL);
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, materia);
+	            ResultSet rs = pstmt.executeQuery();
+
+	            while (rs.next()) {
+	                PalavraChave pc = new PalavraChave(
+	                    rs.getString("palavra"),
+	                    rs.getString("descricao"),
+	                    rs.getString("materia"),
+	                    rs.getString("assunto")
+	                );
+	                pc.setId(rs.getInt("id"));
+	                palavrasChave.add(pc);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return palavrasChave;
 	    }
 }
