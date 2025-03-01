@@ -1,4 +1,4 @@
-package model.dao;
+package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +22,15 @@ public class DataBase {
 //	                         "resposta TEXT NOT NULL, " +
 //	                         "materia TEXT NOT NULL, " +
 //	                         "assunto TEXT NOT NULL)");
+			
+			//  tabela de questões:
+			stmt.execute("CREATE TABLE IF NOT EXISTS questoes (" +
+			             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+			             "pergunta TEXT NOT NULL, " +
+			             "resposta TEXT NOT NULL, " +
+			             "materia TEXT NOT NULL, " +
+			             "assunto TEXT NOT NULL, " +
+			             "exame TEXT NOT NULL)"); // Novo campo "exame"
 //
 //	            // Tabela de resumos
             stmt.execute("CREATE TABLE IF NOT EXISTS resumos (" 

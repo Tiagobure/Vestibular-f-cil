@@ -5,12 +5,16 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER">
-    <Label text="Criar Resumo" />
-    <TextField fx:id="campoTitulo" promptText="Título" />
-    <TextArea fx:id="campoTexto" promptText="Texto do Resumo" />
-    <TextField fx:id="campoMateria" promptText="Matéria" />
-    <TextField fx:id="campoAssunto" promptText="Assunto" />
-    <TextField fx:id="campoAnexo" promptText="Anexo (link ou caminho do arquivo)" />
-    <Button text="Salvar Resumo" onAction="#salvarResumo" />
+<VBox xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER">
+	<Label text="Criar Resumo" />
+	<TextField fx:id="campoTitulo" promptText="Título" />
+	<TextArea fx:id="campoTexto"
+		promptText="Digite seu resumo aqui..." prefRowCount="10"
+		wrapText="true" />
+	<TextField fx:id="campoMateria" promptText="Matéria" />
+	<TextField fx:id="campoAssunto" promptText="Assunto" />
+	<TextField fx:id="campoAnexo"
+		promptText="Anexo (link ou caminho do arquivo)" />
+	<Button text="Salvar Resumo" onAction="#salvarResumo" />
 </VBox>

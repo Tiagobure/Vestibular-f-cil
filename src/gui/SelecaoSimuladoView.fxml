@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+      spacing="20" alignment="CENTER" style="-fx-padding: 20;">
+    <Label text="Escolha o Vestibular:" style="-fx-font-size: 16px;"/>
+    <Button text="FUVEST" onAction="#iniciarFUVEST" style="-fx-min-width: 150px;"/>
+    <Button text="ENEM" onAction="#iniciarENEM" style="-fx-min-width: 150px;"/>
+</VBox>
