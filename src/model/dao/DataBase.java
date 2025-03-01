@@ -24,10 +24,13 @@ public class DataBase {
 //	                         "assunto TEXT NOT NULL)");
 //
 //	            // Tabela de resumos
-//	            stmt.execute("CREATE TABLE IF NOT EXISTS resumos (" +
-//	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//	                         "materia TEXT NOT NULL, " +
-//	                         "texto TEXT NOT NULL)");
+            stmt.execute("CREATE TABLE IF NOT EXISTS resumos (" 
+            		+"id INTEGER PRIMARY KEY AUTOINCREMENT, " 
+            		+"titulo TEXT NOT NULL, " 
+            		+"texto TEXT NOT NULL, "
+            		+ "materia TEXT NOT NULL, "
+            		+ "assunto TEXT NOT NULL, " 
+            		+"anexo TEXT)");
 
 			// Tabela de palavras-chave
 			stmt.execute("CREATE TABLE IF NOT EXISTS palavras_chave (" 
