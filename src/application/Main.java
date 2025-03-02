@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 
+import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +18,10 @@ public class Main extends Application {
 			// Carrega o arquivo FXML da View Principal
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
 			BorderPane root = loader.load();
-			// Configura a cena
-			Scene scene = new Scene(root);
+			MainViewController controller = loader.getController();
+		    controller.setMainApp(this);
+			
+		    Scene scene = new Scene(root);
 			// Configura o título da janela
 			primaryStage.setTitle("AVançar Vestibular");
 			// Define a cena no palco (Stage)

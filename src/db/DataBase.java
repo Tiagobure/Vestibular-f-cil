@@ -9,7 +9,8 @@ public class DataBase {
 	private static final String URL = "jdbc:sqlite:vestibular.db";
 
 	public static void init() {
-		try (Connection conn = DriverManager.getConnection(URL); Statement stmt = conn.createStatement()) {
+		try (Connection conn = DriverManager.getConnection(URL); 
+				Statement stmt = conn.createStatement()) {
 //	            // Tabela de matérias
 //	            stmt.execute("CREATE TABLE IF NOT EXISTS materias (" +
 //	                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
