@@ -6,11 +6,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="512.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="512.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PalavraChaveViewController">
     <Label text="Adicionar Palavra-Chave" />
     <TextField fx:id="campoPalavra" promptText="Palavra-Chave" />
     <TextArea fx:id="campoDescricao" promptText="Descrição" />
     <TextField fx:id="campoMateria" promptText="Matéria" />
     <TextField fx:id="campoAssunto" promptText="Assunto" />
-    <Button onAction="#salvarPalavraChave" text="Salvar" />
+    <Button onAction="#salvarPalavraChaveAction" text="Salvar" />
 </VBox>

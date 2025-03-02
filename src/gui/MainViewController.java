@@ -118,22 +118,22 @@ public class MainViewController implements Initializable{
 	// Métodos de navegação para outras telas
 	@FXML
 	private void abrirSimulados() {
-		carregarTela("/view/SelecaoSimuladoView.fxml", "Simulados");
+		carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados");
 	}
 
 	@FXML
 	private void abrirResumos() {
-		carregarTela("/view/ResumosView.fxml", "Resumos");
+		carregarTela("/gui/ResumosView.fxml", "Resumos");
 	}
 
 	@FXML
 	private void abrirPalavrasChave() {
-		carregarTela("/view/PalavrasChaveView.fxml", "Palavras-Chave");
+		carregarTela("/gui/PalavrasChaveView.fxml", "Palavras-Chave");
 	}
 
 	@FXML
 	private void abrirCronograma() {
-		carregarTela("/view/CronogramaView.fxml", "Cronograma");
+		carregarTela("/gui/CronogramaView.fxml", "Cronograma");
 	}
 
 	// Método genérico para carregar telas

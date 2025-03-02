@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="262.0" prefWidth="266.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" prefHeight="262.0" prefWidth="266.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CronogramaViewController">
     <Label text="Cronograma de Estudos" />
     <TextField fx:id="campoDiaSemana" promptText="Dia da Semana" />
     <TextField fx:id="campoHorario" promptText="Horário" />
