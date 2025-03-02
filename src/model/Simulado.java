@@ -72,4 +72,12 @@ public class Simulado {
 	public boolean isFinalizado() {
 		return tempoRestante <= 0 || questaoAtualIndex >= questoes.size();
 	}
+	
+	public void setAcertos(int acertos) {
+        this.acertos = acertos;
+    }
+
+    public void setErros(int erros) {
+        this.erros = erros;
+    }
 }

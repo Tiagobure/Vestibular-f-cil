@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import model.Questao;
 import model.Simulado;
+import model.dao.SimuladoDAO;
 
 public class QuestaoSimuladoViewController {
 
@@ -27,6 +28,8 @@ public class QuestaoSimuladoViewController {
 	private Timeline timeline;
 	private ToggleGroup grupoAlternativas = new ToggleGroup();
 
+	SimuladoDAO simuladoDAO = new SimuladoDAO();
+	
 	public void setSimulado(Simulado simulado) {
 		this.simulado = simulado;
 		if (simulado != null) {
@@ -125,4 +128,10 @@ public class QuestaoSimuladoViewController {
 	private void exibirMensagem(String mensagem) {
 		labelMensagem.setText(mensagem);
 	}
+	
+	//simuladoDAO.salvarResultado(simulado, usuarioId){
+	//	
+	//}
+	
+	
 }
