@@ -1,44 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23"
+<BorderPane xmlns="http://javafx.com/javafx/21"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="gui.MainViewController">
-	<!-- Topo: Título -->
+	<!-- Topo: Título e Botão de Lupa -->
 	<top>
 		<HBox alignment="CENTER"
-			style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+			style="-fx-background-color: #d32f2f; -fx-padding: 20;">
 			<Label style="-fx-text-fill: white; -fx-font-size: 24px;"
 				text="AVançar Vestibular" />
+			<!-- Botão de Lupa -->
+			<Button onAction="#abrirBusca"
+				style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 5 10;">
+				🔍 <!-- Ícone de lupa Unicode -->
+			</Button>
 		</HBox>
 	</top>
 
 	<!-- Esquerda: Menu de Navegação -->
 	<left>
 		<VBox spacing="10"
-			style="-fx-background-color: #34495e; -fx-padding: 20;">
+			style="-fx-background-color: #b71c1c; -fx-padding: 20;">
 			<Button onAction="#abrirSimulados"
-				style="-fx-min-width: 150px; -fx-font-size: 14px;" text="Simulados" />
+				style="-fx-min-width: 150px; -fx-font-size: 14px; -fx-background-color: #ff5252; -fx-text-fill: white;"
+				text="Simulados" />
 			<Button onAction="#abrirResumos"
-				style="-fx-min-width: 150px; -fx-font-size: 14px;" text="Resumos" />
+				style="-fx-min-width: 150px; -fx-font-size: 14px; -fx-background-color: #ff5252; -fx-text-fill: white;"
+				text="Resumos" />
 			<Button onAction="#abrirPalavrasChave"
-				style="-fx-min-width: 150px; -fx-font-size: 14px;"
+				style="-fx-min-width: 150px; -fx-font-size: 14px; -fx-background-color: #ff5252; -fx-text-fill: white;"
 				text="Palavras-Chave" />
 			<Button onAction="#abrirCronograma"
-				style="-fx-min-width: 150px; -fx-font-size: 14px;" text="Cronograma" />
+				style="-fx-min-width: 150px; -fx-font-size: 14px; -fx-background-color: #ff5252; -fx-text-fill: white;"
+				text="Cronograma" />
 		</VBox>
 	</left>
 
@@ -48,7 +53,8 @@
 			<!-- Seletor de Visualização -->
 			<ComboBox fx:id="comboVisualizacao" layoutX="10"
 				layoutY="10" onAction="#mudarVisualizacao"
-				promptText="Selecione a visualização" />
+				promptText="Selecione a visualização"
+				style="-fx-background-color: #ffffff; -fx-text-fill: #d32f2f;" />
 
 			<!-- Gráfico de Horas (inicialmente visível) -->
 			<LineChart fx:id="graficoHoras" visible="true" layoutX="10"
@@ -62,30 +68,40 @@
 			</LineChart>
 
 			<!-- Calendário (inicialmente oculto) -->
-			    <VBox fx:id="containerCalendario" visible="false" layoutX="10" layoutY="50" 
-              spacing="10" prefWidth="600" prefHeight="400">
-            <!-- Cabeçalho do Calendário -->
-            <HBox alignment="CENTER" spacing="20">
-                <Button text="&lt;" onAction="#mesAnterior"/>
-                <Label fx:id="labelMesAtual" style="-fx-font-size: 18px;"/>
-                <Button text="&gt;" onAction="#proximoMes"/>
-            </HBox>
+			<VBox fx:id="containerCalendario" visible="false" layoutX="10"
+				layoutY="50" spacing="10" prefWidth="600" prefHeight="400">
+				<!-- Cabeçalho do Calendário -->
+				<HBox alignment="CENTER" spacing="20">
+					<Button text="&lt;" onAction="#mesAnterior"
+						style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+					<Label fx:id="labelMesAtual"
+						style="-fx-font-size: 18px; -fx-text-fill: #d32f2f;" />
+					<Button text="&gt;" onAction="#proximoMes"
+						style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+				</HBox>
 
-            <!-- Dias do Mês -->
-            <VBox fx:id="diasDoMes" spacing="5">
-                <!-- Exemplo de uma semana -->
-                <HBox alignment="CENTER" spacing="5">
-                    <Button text="1" onAction="#selecionarDia"/>
-                    <Button text="2" onAction="#selecionarDia"/>
-                    <Button text="3" onAction="#selecionarDia"/>
-                    <Button text="4" onAction="#selecionarDia"/>
-                    <Button text="5" onAction="#selecionarDia"/>
-                    <Button text="6" onAction="#selecionarDia"/>
-                    <Button text="7" onAction="#selecionarDia"/>
-                </HBox>
-                <!-- Adicione mais HBox para as outras semanas -->
-            </VBox>
-            </VBox>
+				<!-- Dias do Mês -->
+				<VBox fx:id="diasDoMes" spacing="5">
+					<!-- Exemplo de uma semana -->
+					<HBox alignment="CENTER" spacing="5">
+						<Button text="1" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="2" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="3" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="4" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="5" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="6" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+						<Button text="7" onAction="#selecionarDia"
+							style="-fx-background-color: #ff5252; -fx-text-fill: white;" />
+					</HBox>
+					<!-- Adicione mais HBox para as outras semanas -->
+				</VBox>
+			</VBox>
 		</AnchorPane>
 	</center>
 </BorderPane>

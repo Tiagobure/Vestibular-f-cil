@@ -1,2 +1,15 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
+/* style.css */
+.caderno {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-background-image: url("linhas.png"); /* Imagem de fundo com linhas */
+    -fx-background-repeat: repeat;
+    -fx-background-position: left top;
+    -fx-padding: 10px;
+    -fx-border-color: #d32f2f;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}

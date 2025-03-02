@@ -155,6 +155,11 @@ public class MainViewController {
 	private void abrirCronograma() {
 		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cronograma");
 	}
+	@FXML
+	private void abrirBusca() {
+		mainApp.carregarTela("/gui/BuscaView.fxml", "Busca");
+
+	}
 
 	// Método genérico para carregar telas
 

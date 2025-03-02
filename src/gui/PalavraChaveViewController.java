@@ -25,10 +25,19 @@ public class PalavraChaveViewController {
 		String materia = campoMateria.getText();
 		String assunto = campoAssunto.getText();
 
+		if (palavra.isEmpty() || descricao.isEmpty() || materia.isEmpty() || assunto.isEmpty()) {
+			System.out.println("Preencha todos os campos!");
+			return;
+		}
+
 		PalavraChave palavraChave = new PalavraChave(palavra, descricao, materia, assunto);
 		palavraChaveDAO.inserir(palavraChave);
 
-		// Limpar campos após salvar
+		System.out.println("Palavra-chave salva com sucesso!");
+		limparCampos();
+	}
+
+	private void limparCampos() {
 		campoPalavra.clear();
 		campoDescricao.clear();
 		campoMateria.clear();

@@ -11,9 +11,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	
+	private static Scene mainScene;
 	@Override
 	public void start(Stage primaryStage) {
 		// inicializarBancoDeDados();
+		
+		
 		try {
 			// Carrega o arquivo FXML da View Principal
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MainView.fxml"));
@@ -21,11 +25,11 @@ public class Main extends Application {
 			MainViewController controller = loader.getController();
 		    controller.setMainApp(this);
 			
-		    Scene scene = new Scene(root);
+		    mainScene = new Scene(root);
 			// Configura o título da janela
 			primaryStage.setTitle("AVançar Vestibular");
 			// Define a cena no palco (Stage)
-			primaryStage.setScene(scene);
+			primaryStage.setScene(mainScene);
 			// Exibe a janela
 			primaryStage.show();
 		} catch (IOException e) {
