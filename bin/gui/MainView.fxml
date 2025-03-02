@@ -51,8 +51,8 @@
 				promptText="Selecione a visualização" />
 
 			<!-- Gráfico de Horas (inicialmente visível) -->
-			<LineChart fx:id="graficoHoras" layoutX="10" layoutY="50"
-				prefHeight="400" prefWidth="600" visible="true">
+			<LineChart fx:id="graficoHoras" visible="true" layoutX="10"
+				layoutY="50" prefWidth="600" prefHeight="400">
 				<xAxis>
 					<CategoryAxis label="Dias da Semana" />
 				</xAxis>
@@ -62,15 +62,30 @@
 			</LineChart>
 
 			<!-- Calendário (inicialmente oculto) -->
-			<VBox fx:id="containerCalendario" layoutX="10" layoutY="50"
-				prefHeight="400" prefWidth="600" spacing="10" visible="false">
-				<!-- Cabeçalho do Calendário -->
-				<HBox alignment="CENTER" spacing="20">
-					<Button onAction="#mesAnterior" text="&lt;" />
-					<Label fx:id="labelMesAtual" style="-fx-font-size: 18px;" />
-					<Button onAction="#proximoMes" text="&gt;" />
-				</HBox>
-			</VBox>
+			    <VBox fx:id="containerCalendario" visible="false" layoutX="10" layoutY="50" 
+              spacing="10" prefWidth="600" prefHeight="400">
+            <!-- Cabeçalho do Calendário -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button text="&lt;" onAction="#mesAnterior"/>
+                <Label fx:id="labelMesAtual" style="-fx-font-size: 18px;"/>
+                <Button text="&gt;" onAction="#proximoMes"/>
+            </HBox>
+
+            <!-- Dias do Mês -->
+            <VBox fx:id="diasDoMes" spacing="5">
+                <!-- Exemplo de uma semana -->
+                <HBox alignment="CENTER" spacing="5">
+                    <Button text="1" onAction="#selecionarDia"/>
+                    <Button text="2" onAction="#selecionarDia"/>
+                    <Button text="3" onAction="#selecionarDia"/>
+                    <Button text="4" onAction="#selecionarDia"/>
+                    <Button text="5" onAction="#selecionarDia"/>
+                    <Button text="6" onAction="#selecionarDia"/>
+                    <Button text="7" onAction="#selecionarDia"/>
+                </HBox>
+                <!-- Adicione mais HBox para as outras semanas -->
+            </VBox>
+            </VBox>
 		</AnchorPane>
 	</center>
 </BorderPane>

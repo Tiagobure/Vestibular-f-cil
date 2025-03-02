@@ -1,40 +1,50 @@
 package gui;
 
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
 
+import application.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-public class MainViewController implements Initializable{
+public class MainViewController {
+
+	private Main mainApp;
+	
+	public void setMainApp(Main mainApp) {
+        this.mainApp = mainApp;
+    }
 	@FXML
 	private LineChart<String, Number> graficoHoras;
+
 	@FXML
 	private VBox containerCalendario;
+
 	@FXML
 	private ComboBox<String> comboVisualizacao;
-	@FXML
-	private GridPane gridDias;
+
 	@FXML
 	private Label labelMesAtual;
+
+	@FXML
+	private VBox diasDoMes;
 
 	private YearMonth mesAtual; // Para controle do calendário
 
 	@FXML
 	public void initialize() {
+		// Inicializa o mês atual
+		mesAtual = YearMonth.now();
+
 		// Configura o ComboBox de visualização
 		comboVisualizacao.getItems().addAll("Gráfico de Horas", "Calendário");
 		comboVisualizacao.getSelectionModel().selectFirst();
@@ -42,8 +52,10 @@ public class MainViewController implements Initializable{
 		// Inicializa o gráfico de horas
 		carregarDadosGrafico();
 
-		// Inicializa o calendário com o mês atual
-		mesAtual = YearMonth.now();
+		// Configura o listener para mudar a visualização
+		comboVisualizacao.setOnAction(event -> mudarVisualizacao());
+
+		// Atualiza o calendário com o mês atual
 		atualizarCalendario();
 	}
 
@@ -51,8 +63,14 @@ public class MainViewController implements Initializable{
 	@FXML
 	private void mudarVisualizacao() {
 		String selecao = comboVisualizacao.getSelectionModel().getSelectedItem();
-		graficoHoras.setVisible(selecao.equals("Gráfico de Horas"));
-		containerCalendario.setVisible(selecao.equals("Calendário"));
+		System.out.println("Opção selecionada: " + selecao);
+		if (selecao.equals("Gráfico de Horas")) {
+			graficoHoras.setVisible(true);
+			containerCalendario.setVisible(false);
+		} else if (selecao.equals("Calendário")) {
+			graficoHoras.setVisible(false);
+			containerCalendario.setVisible(true);
+		}
 	}
 
 	// Carrega dados fictícios no gráfico (substitua com dados reais)
@@ -69,37 +87,39 @@ public class MainViewController implements Initializable{
 
 	// Atualiza o calendário com os dias do mês
 	private void atualizarCalendario() {
-		gridDias.getChildren().clear();
+		diasDoMes.getChildren().clear(); // Limpa os dias anteriores
 		labelMesAtual.setText(mesAtual.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
 
 		LocalDate primeiroDia = mesAtual.atDay(1);
 		int diasNoMes = mesAtual.lengthOfMonth();
 		int diaSemana = primeiroDia.getDayOfWeek().getValue() % 7; // Ajuste para Domingo=0
 
-		// Preenche os dias
-		for (int dia = 1, linha = 1; dia <= diasNoMes; dia++) {
-			VBox dayBox = criarDayBox(dia);
-			gridDias.add(dayBox, (diaSemana + dia - 1) % 7, linha);
-			if ((diaSemana + dia) % 7 == 0)
-				linha++;
-		}
-	}
+		HBox semanaAtual = new HBox(5);
+		semanaAtual.setAlignment(Pos.CENTER);
 
-	// Cria uma caixa para cada dia no calendário
-	private VBox criarDayBox(int dia) {
-		VBox dayBox = new VBox(5);
-		dayBox.setStyle("-fx-border-color: #ccc; -fx-padding: 5;");
-
-		Label lblDia = new Label(String.valueOf(dia));
-		lblDia.setStyle("-fx-font-weight: bold;");
-
-		// Adicione aqui eventos ou notas para o dia (exemplo fictício)
-		if (dia == LocalDate.now().getDayOfMonth() && mesAtual.equals(YearMonth.now())) {
-			dayBox.setStyle("-fx-background-color: #e0f7fa;");
+		// Preenche os dias vazios no início do mês
+		for (int i = 0; i < diaSemana; i++) {
+			semanaAtual.getChildren().add(new Label(""));
 		}
 
-		dayBox.getChildren().add(lblDia);
-		return dayBox;
+		// Preenche os dias do mês
+		for (int dia = 1; dia <= diasNoMes; dia++) {
+			Button botaoDia = new Button(String.valueOf(dia));
+			botaoDia.setOnAction(this::selecionarDia);
+			semanaAtual.getChildren().add(botaoDia);
+
+			// Inicia uma nova semana após o sábado
+			if ((diaSemana + dia) % 7 == 0) {
+				diasDoMes.getChildren().add(semanaAtual);
+				semanaAtual = new HBox(5);
+				semanaAtual.setAlignment(Pos.CENTER);
+			}
+		}
+
+		// Adiciona a última semana (se necessário)
+		if (!semanaAtual.getChildren().isEmpty()) {
+			diasDoMes.getChildren().add(semanaAtual);
+		}
 	}
 
 	// Navegação do calendário
@@ -118,41 +138,34 @@ public class MainViewController implements Initializable{
 	// Métodos de navegação para outras telas
 	@FXML
 	private void abrirSimulados() {
-		carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados");
+		mainApp.carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados");
 	}
 
 	@FXML
 	private void abrirResumos() {
-		carregarTela("/gui/ResumosView.fxml", "Resumos");
+		mainApp.carregarTela("/gui/ResumosView.fxml", "Resumos");
 	}
 
 	@FXML
 	private void abrirPalavrasChave() {
-		carregarTela("/gui/PalavrasChaveView.fxml", "Palavras-Chave");
+		mainApp.carregarTela("/gui/PalavrasChaveView.fxml", "Palavras-Chave");
 	}
 
 	@FXML
 	private void abrirCronograma() {
-		carregarTela("/gui/CronogramaView.fxml", "Cronograma");
+		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cronograma");
 	}
 
 	// Método genérico para carregar telas
-	private void carregarTela(String fxml, String titulo) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-			Parent root = loader.load();
-			Stage stage = new Stage();
-			stage.setScene(new Scene(root));
-			stage.setTitle(titulo);
-			stage.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// TODO Auto-generated method stub
-		
+	@FXML
+	private void selecionarDia(ActionEvent event) {
+		// Obtém o botão que foi clicado
+		Button botaoClicado = (Button) event.getSource();
+		// Obtém o texto do botão (número do dia)
+		String diaSelecionado = botaoClicado.getText();
+
+		// Exibe o dia selecionado no console (ou faz outra ação)
+		System.out.println("Dia selecionado: " + diaSelecionado);
 	}
 }
