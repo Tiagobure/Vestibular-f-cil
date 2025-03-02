@@ -19,6 +19,15 @@ public class PalavraChaveViewController {
 	private PalavraChaveDAO palavraChaveDAO = new PalavraChaveDAO();
 
 	@FXML
+	public void initialize() {
+		// Limitar o tamanho do texto
+		campoDescricao.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.length() > 1000) { // Limite de 5000 caracteres
+				campoDescricao.setText(oldValue);
+			}
+		});
+	}
+	@FXML
 	public void salvarPalavraChaveAction() {
 		String palavra = campoPalavra.getText();
 		String descricao = campoDescricao.getText();

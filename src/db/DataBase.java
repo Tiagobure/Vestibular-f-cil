@@ -44,6 +44,7 @@ public class DataBase {
 					+ "materia TEXT NOT NULL, "
 					+ "assunto TEXT NOT NULL)");
 
+			//cronograma
 			stmt.execute("CREATE TABLE IF NOT EXISTS cronograma (" 
 					+ "id INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ "diaSemana TEXT NOT NULL, "

@@ -9,16 +9,17 @@
 
 <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #ffebee;" 
       xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="gui.ResumosViewController" stylesheets="@style.css">
+      fx:controller="gui.ResumosViewController">
 
     <!-- Título -->
     <Label text="Criar Resumo" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
 
     <!-- Campos de Entrada -->
     <TextField fx:id="campoTitulo" promptText="Título" style="-fx-pref-width: 300px;" />
-    <TextArea fx:id="campoTexto" promptText="Digite seu resumo aqui..." 
-              style="-fx-pref-width: 300px; -fx-pref-height: 300px;" 
-              styleClass="caderno" wrapText="true" />
+    <TextArea fx:id="campoTexto"
+	promptText="Digite seu resumo aqui..."
+	style="-fx-pref-width: 300px; -fx-pref-height: 200px; -fx-font-family: 'Arial'; -fx-font-size: 14px;"
+	wrapText="true" />
     <TextField fx:id="campoMateria" promptText="Matéria" style="-fx-pref-width: 300px;" />
     <TextField fx:id="campoAssunto" promptText="Assunto" style="-fx-pref-width: 300px;" />
     <TextField fx:id="campoAnexo" promptText="Anexo (link ou caminho do arquivo)" style="-fx-pref-width: 300px;" />

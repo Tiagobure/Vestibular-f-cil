@@ -13,12 +13,15 @@ import model.Questao;
 import model.Simulado;
 
 public class QuestaoSimuladoViewController {
+
 	@FXML
 	private Label labelTempo;
 	@FXML
 	private Label labelQuestao;
 	@FXML
 	private VBox containerAlternativas;
+	@FXML
+	private Label labelMensagem; // Adicione uma Label para feedback ao usuário
 
 	private Simulado simulado;
 	private Timeline timeline;
@@ -30,13 +33,14 @@ public class QuestaoSimuladoViewController {
 			carregarQuestaoAtual();
 			iniciarCronometro();
 		} else {
-			System.out.println("Erro: Simulado não foi inicializado.");
+			exibirMensagem("Erro: Simulado não foi inicializado.");
 		}
 	}
 
 	@FXML
 	public void initialize() {
 		containerAlternativas.getChildren().clear();
+		labelMensagem.setText(""); // Inicializa a mensagem como vazia
 	}
 
 	private void iniciarCronometro() {
@@ -46,8 +50,9 @@ public class QuestaoSimuladoViewController {
 	}
 
 	private void atualizarTempo() {
-		if (simulado == null)
+		if (simulado == null) {
 			return;
+		}
 
 		simulado.atualizarTempo();
 		int minutos = simulado.getTempoRestante() / 60;
@@ -55,18 +60,26 @@ public class QuestaoSimuladoViewController {
 		labelTempo.setText(String.format("Tempo Restante: %02d:%02d", minutos, segundos));
 
 		if (simulado.isFinalizado()) {
-			timeline.stop();
+			pararCronometro();
 			mostrarResultados();
 		}
 	}
 
+	private void pararCronometro() {
+		if (timeline != null) {
+			timeline.stop();
+		}
+	}
+
 	private void carregarQuestaoAtual() {
-		if (simulado == null)
+		if (simulado == null) {
+			exibirMensagem("Erro: Simulado não foi inicializado.");
 			return;
+		}
 
 		Questao questao = simulado.getQuestaoAtual();
 		if (questao == null) {
-			System.out.println("Erro: Nenhuma questão disponível.");
+			exibirMensagem("Erro: Nenhuma questão disponível.");
 			return;
 		}
 
@@ -77,26 +90,39 @@ public class QuestaoSimuladoViewController {
 		for (String alternativa : questao.getResposta().split(";")) {
 			RadioButton radio = new RadioButton(alternativa.trim());
 			radio.setToggleGroup(grupoAlternativas);
+			radio.setStyle("-fx-text-fill: white; -fx-font-size: 14px;"); // Estilo para alternativas
 			containerAlternativas.getChildren().add(radio);
 		}
 	}
 
 	@FXML
 	private void proximaQuestao() {
+		if (grupoAlternativas.getSelectedToggle() == null) {
+			exibirMensagem("Selecione uma alternativa antes de prosseguir.");
+			return;
+		}
+
 		if (grupoAlternativas.getSelectedToggle() instanceof RadioButton radioSelecionado) {
 			simulado.registrarResposta(radioSelecionado.getText().substring(0, 1));
 		}
 
 		if (simulado.isFinalizado()) {
+			pararCronometro();
 			mostrarResultados();
 		} else {
 			simulado.avancarQuestao();
 			carregarQuestaoAtual();
+			labelMensagem.setText(""); // Limpa a mensagem ao avançar
 		}
 	}
 
 	private void mostrarResultados() {
-		System.out.println("Acertos: " + simulado.getAcertos());
-		System.out.println("Erros: " + simulado.getErros());
+		exibirMensagem(String.format("Simulado finalizado! Acertos: %d | Erros: %d", simulado.getAcertos(),
+				simulado.getErros()));
+		// Aqui você pode adicionar a lógica para exibir os resultados em uma nova tela
+	}
+
+	private void exibirMensagem(String mensagem) {
+		labelMensagem.setText(mensagem);
 	}
 }

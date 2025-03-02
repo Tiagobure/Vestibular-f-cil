@@ -39,17 +39,26 @@ public class ResumosViewController {
 		String assunto = campoAssunto.getText();
 		String anexo = campoAnexo.getText();
 
+		if (titulo.isEmpty() || texto.isEmpty() || materia.isEmpty() || assunto.isEmpty()) {
+			System.out.println("Preencha todos os campos!");
+			return;
+		}
+
 		Resumo resumo = new Resumo(titulo, texto, materia, assunto);
 		resumo.setAnexo(anexo);
 		resumoDAO.inserir(resumo);
 
 		// Limpar campos após salvar
+		System.out.println("Resumo salvo com sucesso!");
+		limparCampos();
+
+	}
+
+	private void limparCampos() {
 		campoTitulo.clear();
 		campoTexto.clear();
 		campoMateria.clear();
 		campoAssunto.clear();
 		campoAnexo.clear();
-
 	}
-
 }
