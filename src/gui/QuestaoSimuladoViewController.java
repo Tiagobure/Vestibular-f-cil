@@ -1,4 +1,4 @@
-package gui.controller;
+package gui;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
