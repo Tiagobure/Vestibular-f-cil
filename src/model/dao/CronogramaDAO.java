@@ -39,7 +39,7 @@ public class CronogramaDAO {
 
 	        while (rs.next()) {
 	            Cronograma c = new Cronograma(rs.getString("diaSemana"), rs.getString("horario"),
-	                    rs.getString("materia"), rs.getString("assunto"));
+	                    rs.getString("materia"), rs.getString("assunto"), rs.getInt("usuario_id"));
 	            c.setId(rs.getInt("id"));
 	            c.setConcluido(rs.getBoolean("concluido"));
 	            c.setUsuarioId(rs.getInt("usuario_id")); // Definindo usuario_id

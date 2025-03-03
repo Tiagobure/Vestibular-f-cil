@@ -39,7 +39,7 @@ public class ResumoDAO {
 
             while (rs.next()) {
                 Resumo r = new Resumo(rs.getString("titulo"), rs.getString("texto"), rs.getString("materia"),
-                        rs.getString("assunto"));
+                        rs.getString("assunto"), rs.getInt("usuario_id"));
                 r.setId(rs.getInt("id"));
                 r.setAnexo(rs.getString("anexo"));
                 resumos.add(r);
@@ -67,7 +67,7 @@ public class ResumoDAO {
 
             while (rs.next()) {
                 Resumo r = new Resumo(rs.getString("titulo"), rs.getString("texto"), rs.getString("materia"),
-                        rs.getString("assunto"));
+                        rs.getString("assunto"), rs.getInt("usuario_id"));
                 r.setId(rs.getInt("id"));
                 r.setAnexo(rs.getString("anexo"));
                 resumos.add(r);

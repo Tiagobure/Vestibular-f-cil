@@ -15,6 +15,15 @@ public class Cronograma {
         this.horario = horario;
         this.materia = materia;
         this.assunto = assunto;
+        
+    }
+
+    public Cronograma(String diaSemana, String horario, String materia, String assunto, int usuarioId) {
+        this.diaSemana = diaSemana;
+        this.horario = horario;
+        this.materia = materia;
+        this.assunto = assunto;
+        this.usuarioId = usuarioId;
     }
 
     // Getters e Setters

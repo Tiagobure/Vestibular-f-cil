@@ -38,7 +38,7 @@ public class PalavraChaveDAO {
 
 			while (rs.next()) {
 				PalavraChave pc = new PalavraChave(rs.getString("palavra"), rs.getString("descricao"),
-						rs.getString("materia"), rs.getString("assunto"));
+						rs.getString("materia"), rs.getString("assunto"), rs.getInt("usuario_id"));
 				pc.setId(rs.getInt("id"));
 				palavrasChave.add(pc);
 			}
@@ -68,7 +68,7 @@ public class PalavraChaveDAO {
 
 			while (rs.next()) {
 				PalavraChave pc = new PalavraChave(rs.getString("palavra"), rs.getString("descricao"),
-						rs.getString("materia"), rs.getString("assunto"));
+						rs.getString("materia"), rs.getString("assunto"), rs.getInt("usuario_id"));
 				pc.setId(rs.getInt("id"));
 				palavrasChave.add(pc);
 			}

@@ -9,13 +9,21 @@ public class PalavraChave {
 	private int usuarioId;
 
 	// Construtor, getters e setters
+	public PalavraChave(String palavra, String descricao, String materia, String assunto, int usuarioId) {
+		this.palavra = palavra;
+		this.descricao = descricao;
+		this.materia = materia;
+		this.assunto = assunto;
+		this.usuarioId = usuarioId;
+	}
+
 	public PalavraChave(String palavra, String descricao, String materia, String assunto) {
 		this.palavra = palavra;
 		this.descricao = descricao;
 		this.materia = materia;
 		this.assunto = assunto;
+		
 	}
-
 	// Getters e setters...
 	public int getId() {
 		return id;

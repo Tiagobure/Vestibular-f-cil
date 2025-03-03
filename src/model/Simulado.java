@@ -10,6 +10,7 @@ public class Simulado {
 	private int acertos;
 	private int erros;
 	private int usuarioId;
+	
 	// Construtor
 	public Simulado(String vestibularSelecionado, List<Questao> questoes, int tempoTotal) {
 		this.vestibularSelecionado = vestibularSelecionado;
@@ -18,6 +19,7 @@ public class Simulado {
 		this.questaoAtualIndex = 0;
 		this.acertos = 0;
 		this.erros = 0;
+
 	}
 
 	// Getters e Setters
