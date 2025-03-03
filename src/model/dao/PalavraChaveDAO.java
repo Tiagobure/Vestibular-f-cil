@@ -54,4 +54,42 @@ public class PalavraChaveDAO {
 
 	        return palavrasChave;
 	    }
+	    
+	    public List<PalavraChave> buscarPorTermo(String termo) {
+	        List<PalavraChave> palavrasChave = new ArrayList<>();
+	        String sql = "SELECT * FROM palavras_chave WHERE " +
+	                     "palavra LIKE ? OR " +
+	                     "descricao LIKE ? OR " +
+	                     "materia LIKE ? OR " +
+	                     "assunto LIKE ?";
+
+	        try (Connection conn = DataBase.getConnection();
+	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	            // Adiciona o termo de busca em cada campo
+	            String termoBusca = "%" + termo + "%"; // Usamos % para buscar parcialmente
+	            pstmt.setString(1, termoBusca);
+	            pstmt.setString(2, termoBusca);
+	            pstmt.setString(3, termoBusca);
+	            pstmt.setString(4, termoBusca);
+
+	            ResultSet rs = pstmt.executeQuery();
+
+	            while (rs.next()) {
+	                PalavraChave pc = new PalavraChave(
+	                    rs.getString("palavra"),
+	                    rs.getString("descricao"),
+	                    rs.getString("materia"),
+	                    rs.getString("assunto")
+	                );
+	                pc.setId(rs.getInt("id"));
+	                palavrasChave.add(pc);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return palavrasChave;
+	    }
+	   
 }

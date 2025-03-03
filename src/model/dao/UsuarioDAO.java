@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.DataBase;
+import gui.util.Alerts;
+import javafx.scene.control.Alert.AlertType;
 import model.Usuario;
 
 public class UsuarioDAO {
@@ -39,7 +41,7 @@ public class UsuarioDAO {
 				return usuario;
 			}
 		} catch (SQLException e) {
-			System.err.println("Erro ao fazer login: " + e.getMessage());
+			Alerts.showAlert("Usuario não encontrado","Revise os dados","Usuario não existe", AlertType.INFORMATION);
 			e.printStackTrace();
 		}
 

@@ -3,22 +3,21 @@ package gui;
 import java.util.List;
 
 import application.Main;
+import gui.util.Alerts;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.Cronograma;
 import model.dao.CronogramaDAO;
 
 public class CronogramaViewController {
 
 	private Main mainApp;
-
+	private CronogramaDAO cronogramaDAO;
+	
 	@FXML
 	private TextField campoDiaSemana;
 	@FXML
@@ -29,14 +28,14 @@ public class CronogramaViewController {
 	private TextField campoAssunto;
 	@FXML
 	private CheckBox checkConcluido;
-
 	@FXML
 	private ListView<String> listaCronograma;
-	
-	private CronogramaDAO cronogramaDAO = new CronogramaDAO();
 
-	
-	
+	public CronogramaViewController() {
+		// Injeção de dependência 
+		this.cronogramaDAO = new CronogramaDAO(); 
+	}
+
 	@FXML
 	public void salvarBloco() {
 		String diaSemana = campoDiaSemana.getText();
@@ -46,55 +45,57 @@ public class CronogramaViewController {
 		boolean concluido = checkConcluido.isSelected();
 
 		if (diaSemana.isEmpty() || horario.isEmpty() || materia.isEmpty() || assunto.isEmpty()) {
-            System.out.println("Preencha todos os campos!");
-            return;
-        }
+			Alerts.showAlert("Erro",null,"Preencha todos os campos", AlertType.ERROR);
+			return;
+		}
+
 		Cronograma cronograma = new Cronograma(diaSemana, horario, materia, assunto);
 		cronograma.setConcluido(concluido);
 		cronogramaDAO.inserir(cronograma);
 
-		// Limpar campos após salvar
-        System.out.println("Bloco salvo com sucesso!");
+		Alerts.showAlert("Sucesso",null, "Bloco salvo com sucesso!", AlertType.INFORMATION);
 		limparCampos();
+		atualizarCronograma();
 	}
+
 	private void limparCampos() {
-        campoDiaSemana.clear();
-        campoHorario.clear();
-        campoMateria.clear();
-        campoAssunto.clear();
-        checkConcluido.setSelected(false);
-    }
-	@FXML
-    private void abrirCadastroCronograma() {
-		// Abre a tela de cadastro de cronograma
-		try{
-		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cadastro");
-        }catch(Exception e) {
-            System.err.println("Erro ao abrir a tela de cadastro: " + e.getMessage());
-        e.printStackTrace();
-        }
+		campoDiaSemana.clear();
+		campoHorario.clear();
+		campoMateria.clear();
+		campoAssunto.clear();
+		checkConcluido.setSelected(false);
 	}
-	
-	
+
 	@FXML
-    public void initialize() {
-        // Carrega o cronograma ao abrir a tela
-        atualizarCronograma();
-    }
-	 @FXML
-	    private void atualizarCronograma() {
-	        // Limpa a lista atual
-	        listaCronograma.getItems().clear();
+	private void abrirCadastroCronograma() {
+		try {
+			mainApp.carregarTela("/gui/CronogramaView.fxml", "Cadastro");
+		} catch (Exception e) {
+			Alerts.showAlert("Erro",null, "Erro ao abrir a tela de cadastro: " + e.getMessage(), AlertType.ERROR);
+			e.printStackTrace();
+		}
+	}
 
-	        // Recupera os blocos de estudo do banco de dados
-	        List<Cronograma> blocos = cronogramaDAO.listarTodos();
+	@FXML
+	public void initialize() {
+		atualizarCronograma();
+	}
 
-	        // Adiciona cada bloco à ListView
-	        for (Cronograma bloco : blocos) {
-	            String status = bloco.isConcluido() ? "[Concluído] " : "[Pendente] ";
-	            String texto = status + bloco.getDiaSemana() + " - " + bloco.getHorario() + ": " + bloco.getMateria() + " (" + bloco.getAssunto() + ")";
-	            listaCronograma.getItems().add(texto);
-	        }
-	    }
-	
+	private void atualizarCronograma() {
+		listaCronograma.getItems().clear();
+		List<Cronograma> blocos = cronogramaDAO.listarTodos();
+
+		for (Cronograma bloco : blocos) {
+			String status = bloco.isConcluido() ? "[Concluído] " : "[Pendente] ";
+			String texto = status + bloco.getDiaSemana() + " - " + bloco.getHorario() + ": " + bloco.getMateria() + " ("
+					+ bloco.getAssunto() + ")";
+			listaCronograma.getItems().add(texto);
+		}
+	}
+
+
+	public void setMainApp(Main mainApp) {
+		this.mainApp = mainApp;
+	}
+
 }

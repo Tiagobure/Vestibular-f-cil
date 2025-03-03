@@ -28,5 +28,6 @@ public class CadastroViewController {
 		Usuario usuario = new Usuario(nome, senha);
 		usuarioDAO.cadastrarUsuario(usuario);
 		System.out.println("Usuário cadastrado com sucesso!");
+		
 	}
 }
