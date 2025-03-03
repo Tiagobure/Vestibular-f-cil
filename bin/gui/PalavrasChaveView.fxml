@@ -4,31 +4,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #ffebee;" 
-      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="gui.PalavraChaveViewController">
+<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #ffebee;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.PalavraChaveViewController">
 
     <!-- Título -->
-    <Label text="Adicionar Palavra-Chave" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
+    <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" text="Adicionar Palavra-Chave" />
 
     <!-- Campo Palavra-Chave -->
     <TextField fx:id="campoPalavra" promptText="Palavra-Chave" style="-fx-pref-width: 300px;" />
 
     <!-- Campo Descrição -->
-    <TextArea fx:id="campoDescricao" promptText="Descrição" style="-fx-pref-width: 300px; -fx-pref-height: 100px;" />
+    <TextArea fx:id="campoDescricao" promptText="Descrição" style="-fx-pref-width: 300px; -fx-pref-height: 100px;" wrapText="true" />
 
     <!-- Campos Matéria e Assunto -->
-    <HBox spacing="10" alignment="CENTER">
+    <HBox alignment="CENTER" spacing="10">
         <TextField fx:id="campoMateria" promptText="Matéria" style="-fx-pref-width: 145px;" />
         <TextField fx:id="campoAssunto" promptText="Assunto" style="-fx-pref-width: 145px;" />
     </HBox>
 
     <!-- Botão Salvar -->
-    <Button onAction="#salvarPalavraChaveAction" text="Salvar" 
-            style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 100px;" />
+    <Button onAction="#salvarPalavraChaveAction" style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 100px;" text="Salvar" />
 </VBox>

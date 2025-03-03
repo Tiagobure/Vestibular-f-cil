@@ -4,11 +4,18 @@ import java.util.List;
 import java.util.Stack;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import model.PalavraChave;
 import model.Resumo;
 import model.dao.PalavraChaveDAO;
@@ -48,20 +55,76 @@ public class BuscaViewController {
 				super.updateItem(item, empty);
 				if (empty || item == null) {
 					setText(null);
+					setGraphic(null);
 				} else {
+					Label label = new Label();
+					Button btnVerMais = new Button("Ver Mais");
+
+					btnVerMais.setStyle("-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-size: 12px;");
 					if (item instanceof Resumo) {
 						Resumo resumo = (Resumo) item;
-						setText("Título: " + resumo.getTitulo() + "\n" + "Matéria: " + resumo.getMateria() + "\n"
-								+ "Assunto: " + resumo.getAssunto() + "\n" + "Resumo: "
-								+ resumo.getTexto().substring(0, Math.min(100, resumo.getTexto().length())) + "...");
+						String resumoCurto = resumo.getTexto().substring(0, Math.min(100, resumo.getTexto().length()))
+								+ "...";
+						label.setText("Título: " + resumo.getTitulo() + "\n" + "Matéria: " + resumo.getMateria() + "\n"
+								+ "Assunto: " + resumo.getAssunto() + "\n" + "Resumo: " + resumoCurto);
+
+						btnVerMais.setOnAction(event -> mostrarPopupResumo(resumo));
+
 					} else if (item instanceof PalavraChave) {
+
 						PalavraChave palavraChave = (PalavraChave) item;
-						setText("Palavra-Chave: " + palavraChave.getPalavra() + "\n" + "Descrição: "
-								+ palavraChave.getDescricao());
+						String descricaoCurta = palavraChave.getDescricao().substring(0,
+								Math.min(100, palavraChave.getDescricao().length())) + "...";
+						label.setText("Palavra-Chave: " + palavraChave.getPalavra() + "\n" + "Matéria: "
+								+ palavraChave.getMateria() + "\n" + "Assunto: " + palavraChave.getAssunto() + "\n"
+								+ "Descrição: " + descricaoCurta);
+						btnVerMais.setOnAction(event -> mostrarPopupPalavraChave(palavraChave));
+					}
+
+					// Criando o botão com um ícone de lixeira
+					Button btnDeletar = new Button("🗑");
+					btnDeletar.setStyle(
+							"-fx-background-color: #e53935; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 30px; -fx-min-height: 30px; -fx-background-radius: 15px;");
+
+					// Efeito de sombra para destacar o botão
+					DropShadow shadow = new DropShadow();
+					shadow.setRadius(5.0);
+					shadow.setOffsetX(2.0);
+					shadow.setOffsetY(2.0);
+					shadow.setColor(Color.rgb(0, 0, 0, 0.3));
+					btnDeletar.setEffect(shadow);
+
+					// Efeito de hover (muda de cor ao passar o mouse)
+					btnDeletar.setOnMouseEntered(e -> btnDeletar.setStyle(
+							"-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 30px; -fx-min-height: 30px; -fx-background-radius: 15px;"));
+					btnDeletar.setOnMouseExited(e -> btnDeletar.setStyle(
+							"-fx-background-color: #e53935; -fx-text-fill: white; -fx-font-size: 14px; -fx-min-width: 30px; -fx-min-height: 30px; -fx-background-radius: 15px;"));
+
+					btnDeletar.setOnAction(event -> deletarItem(item));
+
+					// Layout horizontal (Texto + Botão)
+					if ((item instanceof Resumo && ((Resumo) item).getTexto().length() > 100)
+							|| (item instanceof PalavraChave && ((PalavraChave) item).getDescricao().length() > 10)) {
+						HBox hbox = new HBox(10, label, btnVerMais, btnDeletar);
+						setGraphic(hbox);
+					} else {
+						HBox hbox = new HBox(10, label, btnDeletar);
+						setGraphic(hbox);
 					}
 				}
 			}
 		});
+	}
+
+	// Método para deletar um item da lista e do banco de dados
+	private void deletarItem(Object item) {
+		if (item instanceof Resumo) {
+			resumoDAO.deletar((Resumo) item);
+		} else if (item instanceof PalavraChave) {
+			palavraChaveDAO.deletar((PalavraChave) item);
+		}
+		listaResultados.getItems().remove(item);
+		mensagemFeedback.setText("Item deletado com sucesso!");
 	}
 
 	@FXML
@@ -139,4 +202,62 @@ public class BuscaViewController {
 			mensagemFeedback.setText("Não há pesquisas futuras para avançar!");
 		}
 	}
+
+	private void mostrarPopupResumo(Resumo resumo) {
+		Stage popupStage = new Stage();
+		popupStage.setTitle("Resumo Completo");
+
+		VBox vbox = new VBox(10);
+		vbox.setStyle("-fx-padding: 20; -fx-background-color: #ffebee;");
+
+		Label lblTitulo = new Label("Título: " + resumo.getTitulo());
+		lblTitulo.setStyle("-fx-font-weight: bold; -fx-text-fill: #d32f2f; -fx-font-size: 16px;");
+
+		Label lblMateria = new Label("Matéria: " + resumo.getMateria());
+		Label lblAssunto = new Label("Assunto: " + resumo.getAssunto());
+
+		Label lblTexto = new Label(resumo.getTexto());
+		lblTexto.setWrapText(true);
+
+		Button btnFechar = new Button("Fechar");
+		btnFechar.setStyle("-fx-background-color: #ff5252; -fx-text-fill: white;");
+		btnFechar.setOnAction(event -> popupStage.close());
+
+		vbox.getChildren().addAll(lblTitulo, lblMateria, lblAssunto, lblTexto, btnFechar);
+
+		Scene scene = new Scene(vbox, 400, 300);
+		popupStage.setScene(scene);
+		popupStage.show();
+	}
+
+	private void mostrarPopupPalavraChave(PalavraChave palavraChave) {
+		Stage popupStage = new Stage();
+		popupStage.setTitle("Detalhes da Palavra-Chave");
+
+		VBox vbox = new VBox(10);
+		vbox.setStyle("-fx-padding: 20; -fx-background-color: #ffebee;");
+
+		Label lblPalavra = new Label("Palavra-Chave: " + palavraChave.getPalavra());
+		lblPalavra.setStyle("-fx-font-weight: bold; -fx-text-fill: #d32f2f; -fx-font-size: 16px;");
+
+		Label lblMateria = new Label("Matéria: " + palavraChave.getMateria());
+		lblMateria.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+
+		Label lblAssunto = new Label("Assunto: " + palavraChave.getAssunto());
+		lblAssunto.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+
+		Label lblDescricao = new Label(palavraChave.getDescricao());
+		lblDescricao.setWrapText(true);
+
+		Button btnFechar = new Button("Fechar");
+		btnFechar.setStyle("-fx-background-color: #ff5252; -fx-text-fill: white;");
+		btnFechar.setOnAction(event -> popupStage.close());
+
+		vbox.getChildren().addAll(lblPalavra, lblMateria, lblAssunto, lblDescricao, btnFechar);
+
+		Scene scene = new Scene(vbox, 400, 250);
+		popupStage.setScene(scene);
+		popupStage.show();
+	}
+
 }

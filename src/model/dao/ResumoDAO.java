@@ -78,4 +78,15 @@ public class ResumoDAO {
 
         return resumos;
     }
+    
+    public void deletar(Resumo resumo) {
+        String sql = "DELETE FROM resumos WHERE id = ?";
+        try (Connection conn = DataBase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, resumo.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

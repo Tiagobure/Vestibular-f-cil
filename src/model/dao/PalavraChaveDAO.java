@@ -78,4 +78,15 @@ public class PalavraChaveDAO {
 
 		return palavrasChave;
 	}
+
+	public void deletar(PalavraChave palavraChave) {
+		String sql = "DELETE FROM palavras_chave WHERE id = ?";
+		try (Connection conn = DataBase.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, palavraChave.getId());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
