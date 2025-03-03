@@ -66,9 +66,14 @@ public class CronogramaViewController {
     }
 	@FXML
     private void abrirCadastroCronograma() {
-        // Abre a tela de cadastro de cronograma
+		// Abre a tela de cadastro de cronograma
+		try{
 		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cadastro");
-		}
+        }catch(Exception e) {
+            System.err.println("Erro ao abrir a tela de cadastro: " + e.getMessage());
+        e.printStackTrace();
+        }
+	}
 	
 	
 	@FXML
