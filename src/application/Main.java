@@ -4,14 +4,13 @@ import java.io.IOException;
 
 import db.DataBase;
 import gui.LoginViewController;
+import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.Usuario;
-import model.dao.UsuarioDAO;
 
 public class Main extends Application {
 
@@ -45,6 +44,13 @@ public class Main extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 			Parent root = loader.load();
+			// Obtém o controlador da tela carregada
+	        Object controller = loader.getController();
+
+	        // Se o controlador for uma instância de MainViewController, define a referência do Main
+	        if (controller instanceof MainViewController) {
+	            ((MainViewController) controller).setMainApp(this);
+	        }
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle(titulo);
