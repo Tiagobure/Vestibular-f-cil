@@ -153,7 +153,7 @@ public class MainViewController {
 
 	@FXML
 	private void abrirCronograma() {
-		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cronograma");
+		mainApp.carregarTela("/gui/MostrarConogramaView.fxml", "Cronograma");
 	}
 	@FXML
 	private void abrirBusca() {

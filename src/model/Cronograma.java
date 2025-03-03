@@ -8,7 +8,6 @@ public class Cronograma {
 	private String assunto; // Ex.: "Geometria Analítica"
 	private boolean concluido; // Indica se o bloco foi concluído
 
-	// Construtor, getters e setters
 	public Cronograma(String diaSemana, String horario, String materia, String assunto) {
 		this.diaSemana = diaSemana;
 		this.horario = horario;

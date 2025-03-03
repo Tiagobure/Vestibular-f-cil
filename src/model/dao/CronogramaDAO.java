@@ -1,7 +1,6 @@
 package model.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,6 +48,32 @@ public class CronogramaDAO {
 
 		return cronogramas;
 	}
+	// Método para listar todos os blocos de estudo
+    public List<Cronograma> listarTodos() {
+        List<Cronograma> blocos = new ArrayList<>();
+        String sql = "SELECT * FROM cronograma";
+
+        try (Connection conn = DataBase.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                Cronograma bloco = new Cronograma(
+                    rs.getString("diaSemana"),
+                    rs.getString("horario"),
+                    rs.getString("materia"),
+                    rs.getString("assunto")
+                );
+                bloco.setId(rs.getInt("id"));
+                blocos.add(bloco);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar cronograma: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return blocos;
+    }
 
 	// Outros métodos como marcar como concluído, atualizar, deletar, etc.
 }

@@ -50,14 +50,7 @@ public class Main extends Application {
 	    }
 
 
-	// private void inicializarBancoDeDados() {
-	// try (Connection conn =
-	// DriverManager.getConnection("jdbc:sqlite:vestibular.db")) {
-	// System.out.println("Banco de dados conectado!");
-	// } catch (SQLException e) {
-	// System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
-	// }
-	// }
+	
 
 	public static void main(String[] args) {
 		launch(args);

@@ -1,12 +1,23 @@
 package gui;
 
+import java.util.List;
+
+import application.Main;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Cronograma;
 import model.dao.CronogramaDAO;
 
 public class CronogramaViewController {
+
+	private Main mainApp;
 
 	@FXML
 	private TextField campoDiaSemana;
@@ -19,8 +30,13 @@ public class CronogramaViewController {
 	@FXML
 	private CheckBox checkConcluido;
 
+	@FXML
+	private ListView<String> listaCronograma;
+	
 	private CronogramaDAO cronogramaDAO = new CronogramaDAO();
 
+	
+	
 	@FXML
 	public void salvarBloco() {
 		String diaSemana = campoDiaSemana.getText();
@@ -48,5 +64,32 @@ public class CronogramaViewController {
         campoAssunto.clear();
         checkConcluido.setSelected(false);
     }
+	@FXML
+    private void abrirCadastroCronograma() {
+        // Abre a tela de cadastro de cronograma
+		mainApp.carregarTela("/gui/CronogramaView.fxml", "Cadastro");
+		}
+	
+	
+	@FXML
+    public void initialize() {
+        // Carrega o cronograma ao abrir a tela
+        atualizarCronograma();
+    }
+	 @FXML
+	    private void atualizarCronograma() {
+	        // Limpa a lista atual
+	        listaCronograma.getItems().clear();
+
+	        // Recupera os blocos de estudo do banco de dados
+	        List<Cronograma> blocos = cronogramaDAO.listarTodos();
+
+	        // Adiciona cada bloco à ListView
+	        for (Cronograma bloco : blocos) {
+	            String status = bloco.isConcluido() ? "[Concluído] " : "[Pendente] ";
+	            String texto = status + bloco.getDiaSemana() + " - " + bloco.getHorario() + ": " + bloco.getMateria() + " (" + bloco.getAssunto() + ")";
+	            listaCronograma.getItems().add(texto);
+	        }
+	    }
 	
 }
