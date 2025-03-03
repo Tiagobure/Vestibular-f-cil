@@ -1,85 +1,82 @@
 package model;
 
 public class Cronograma {
-    private int id;
-    private String diaSemana;
-    private String horario;
-    private String materia;
-    private String assunto;
-    private boolean concluido;
-    private int usuarioId; 
-    
-    // Construtor
-    public Cronograma(String diaSemana, String horario, String materia, String assunto) {
-        this.diaSemana = diaSemana;
-        this.horario = horario;
-        this.materia = materia;
-        this.assunto = assunto;
-        
-    }
+	private int id;
+	private String diaSemana;
+	private String horario;
+	private String materia;
+	private String assunto;
+	private boolean concluido;
+	private int usuarioId;
 
-    public Cronograma(String diaSemana, String horario, String materia, String assunto, int usuarioId) {
-        this.diaSemana = diaSemana;
-        this.horario = horario;
-        this.materia = materia;
-        this.assunto = assunto;
-        this.usuarioId = usuarioId;
-    }
+	public Cronograma(String diaSemana, String horario, String materia, String assunto, int usuarioId) {
+		this.diaSemana = diaSemana;
+		this.horario = horario;
+		this.materia = materia;
+		this.assunto = assunto;
+		this.usuarioId = usuarioId;
+	}
 
-    // Getters e Setters
-    public int getId() {
-        return id;
-    }
+	
+	public Cronograma(String diaSemana, String horario, String materia, String assunto) {
+		this(diaSemana, horario, materia, assunto, 0);
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	}
 
-    public String getDiaSemana() {
-        return diaSemana;
-    }
+	// Getters e Setters
+	public int getId() {
+		return id;
+	}
 
-    public void setDiaSemana(String diaSemana) {
-        this.diaSemana = diaSemana;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getHorario() {
-        return horario;
-    }
+	public String getDiaSemana() {
+		return diaSemana;
+	}
 
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
+	public void setDiaSemana(String diaSemana) {
+		this.diaSemana = diaSemana;
+	}
 
-    public String getMateria() {
-        return materia;
-    }
+	public String getHorario() {
+		return horario;
+	}
 
-    public void setMateria(String materia) {
-        this.materia = materia;
-    }
+	public void setHorario(String horario) {
+		this.horario = horario;
+	}
 
-    public String getAssunto() {
-        return assunto;
-    }
+	public String getMateria() {
+		return materia;
+	}
 
-    public void setAssunto(String assunto) {
-        this.assunto = assunto;
-    }
+	public void setMateria(String materia) {
+		this.materia = materia;
+	}
 
-    public boolean isConcluido() {
-        return concluido;
-    }
+	public String getAssunto() {
+		return assunto;
+	}
 
-    public void setConcluido(boolean concluido) {
-        this.concluido = concluido;
-    }
+	public void setAssunto(String assunto) {
+		this.assunto = assunto;
+	}
 
-    public int getUsuarioId() {
-        return usuarioId;
-    }
+	public boolean isConcluido() {
+		return concluido;
+	}
 
-    public void setUsuarioId(int usuarioId) {
-        this.usuarioId = usuarioId;
-    }
+	public void setConcluido(boolean concluido) {
+		this.concluido = concluido;
+	}
+
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
 }

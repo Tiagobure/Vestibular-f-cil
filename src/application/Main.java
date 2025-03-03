@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 
+import db.DataBase;
 import gui.LoginViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -58,13 +59,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+		
+		DataBase.init();
 		launch(args);
 		
 		
-	UsuarioDAO usuarioDAO = new UsuarioDAO();
-    Usuario usuarioTeste = new Usuario("teste", "123456"); // Nome: teste | Senha: 123456
-    usuarioDAO.cadastrarUsuario(usuarioTeste);
-	System.out.println("Usuário de teste criado com sucesso!");
 		    
 		
 

@@ -18,11 +18,7 @@ public class PalavraChave {
 	}
 
 	public PalavraChave(String palavra, String descricao, String materia, String assunto) {
-		this.palavra = palavra;
-		this.descricao = descricao;
-		this.materia = materia;
-		this.assunto = assunto;
-		
+		this(palavra, descricao, materia, assunto, 0); // Assume 0 como valor padrão para usuarioId
 	}
 	// Getters e setters...
 	public int getId() {
@@ -72,6 +68,13 @@ public class PalavraChave {
 	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
+	
+	// Método toString() para facilitar debug
+		@Override
+		public String toString() {
+			return "PalavraChave [id=" + id + ", palavra=" + palavra + ", descricao=" + descricao + 
+			       ", materia=" + materia + ", assunto=" + assunto + ", usuarioId=" + usuarioId + "]";
+		}
 	
 	
 }

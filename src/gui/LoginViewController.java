@@ -2,10 +2,12 @@ package gui;
 
 import application.Main;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Usuario;
 import model.dao.UsuarioDAO;
+import gui.util.*;
 
 public class LoginViewController {
 
@@ -27,35 +29,39 @@ public class LoginViewController {
 		String nome = campoNome.getText().trim();
 		String senha = campoSenha.getText().trim();
 
-		Usuario usuario = usuarioDAO.fazerLogin(nome, senha);
-		
-		if (usuario != null) {
-			System.out.println("Login bem-sucedido! Bem-vindo, " + usuario.getNome());
-			// Aqui você pode abrir a tela principal do sistema
-			abrirMainView();
-		} else {
-			System.out.println("Nome ou senha incorretos.");
+		if (nome.isEmpty() || senha.isEmpty()) {
+			Alerts.showAlert("Erro", null, "Preencha todos os campos!", AlertType.ERROR);
+			;
 			return;
 		}
+
+		Usuario usuario = usuarioDAO.fazerLogin(nome, senha);
+
+		if (usuario != null) {
+			Alerts.showAlert("Sucesso", null, "Bem-vindo, " + usuario.getNome() + "!", AlertType.INFORMATION);
+			abrirMainView();
+		} else {
+			Alerts.showAlert("Erro", null, "Nome ou senha incorretos!", AlertType.ERROR);
+		}
 	}
-	
+
 	private void abrirMainView() {
-		try{
-			mainApp.carregarTela("/gui/MainView.fxml", "AVançar Vestibular");
-	        }catch(Exception e) {
-	            System.err.println("Erro ao abrir a tela principal: " + e.getMessage());
-	        e.printStackTrace();
-	        }
+		try {
+			mainApp.carregarTela("/gui/MainView.fxml", "Avançar Vestibular");
+		} catch (Exception e) {
+			Alerts.showAlert("Erro", null, "Não foi possível abrir a tela principal!", AlertType.ERROR);
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
 	private void abrirCadastro() {
-		// Aqui você pode abrir a tela de cadastro
-		try{
+		try {
 			mainApp.carregarTela("/gui/CadastroView.fxml", "Cadastro");
-	        }catch(Exception e) {
-	            System.err.println("Erro ao abrir a tela de cadastro: " + e.getMessage());
-	        e.printStackTrace();
-	        }
+		} catch (Exception e) {
+			Alerts.showAlert("Erro", null, "Não foi possível abrir a tela de cadastro!", AlertType.ERROR);
+			e.printStackTrace();
+		}
 	}
+
 }
