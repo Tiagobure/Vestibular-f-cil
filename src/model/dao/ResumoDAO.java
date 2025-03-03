@@ -8,15 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DataBase;
 import model.Resumo;
 
 public class ResumoDAO {
-	private static final String URL = "jdbc:sqlite:vestibular.db";
 
 	public void inserir(Resumo resumo) {
 		String sql = "INSERT INTO resumos (titulo, texto, materia, assunto, anexo) VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, resumo.getTitulo());
 			pstmt.setString(2, resumo.getTexto());
 			pstmt.setString(3, resumo.getMateria());
@@ -32,7 +32,7 @@ public class ResumoDAO {
 		List<Resumo> resumos = new ArrayList<>();
 		String sql = "SELECT * FROM resumos WHERE materia = ?";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, materia);
 			ResultSet rs = pstmt.executeQuery();
 
@@ -55,7 +55,7 @@ public class ResumoDAO {
 		String sql = "SELECT * FROM resumos WHERE " + "titulo LIKE ? OR " + "texto LIKE ? OR " + "materia LIKE ? OR "
 				+ "assunto LIKE ?";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 			String parametro = "%" + termo + "%";
 			pstmt.setString(1, parametro);

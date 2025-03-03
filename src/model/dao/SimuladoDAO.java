@@ -8,17 +8,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DataBase;
 import model.Simulado;
 
 public class SimuladoDAO {
 
-	private static final String URL = "jdbc:sqlite:vestibular.db";
 
 	// Salva os resultados do simulado no banco de dados
 	public void salvarResultado(Simulado simulado, int usuarioId) {
 		String sql = "INSERT INTO resultados_simulado (usuario_id, vestibular, acertos, erros, tempo_restante) VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, usuarioId);
 			pstmt.setString(2, simulado.getVestibularSelecionado());
 			pstmt.setInt(3, simulado.getAcertos());
@@ -35,7 +35,7 @@ public class SimuladoDAO {
 		List<Simulado> historico = new ArrayList<>();
 		String sql = "SELECT vestibular, acertos, erros, tempo_restante FROM resultados_simulado WHERE usuario_id = ?";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, usuarioId);
 			ResultSet rs = pstmt.executeQuery();
 

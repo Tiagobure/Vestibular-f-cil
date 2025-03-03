@@ -8,15 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DataBase;
 import model.Cronograma;
 
 public class CronogramaDAO {
-	private static final String URL = "jdbc:sqlite:vestibular.db";
 
 	public void inserir(Cronograma cronograma) {
 		String sql = "INSERT INTO cronograma (diaSemana, horario, materia, assunto, concluido) VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, cronograma.getDiaSemana());
 			pstmt.setString(2, cronograma.getHorario());
 			pstmt.setString(3, cronograma.getMateria());
@@ -32,7 +32,7 @@ public class CronogramaDAO {
 		List<Cronograma> cronogramas = new ArrayList<>();
 		String sql = "SELECT * FROM cronograma WHERE diaSemana = ?";
 
-		try (Connection conn = DriverManager.getConnection(URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, diaSemana);
 			ResultSet rs = pstmt.executeQuery();
 

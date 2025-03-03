@@ -8,16 +8,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DataBase;
 import model.PalavraChave;
 
 public class PalavraChaveDAO {
 	
-	  private static final String URL = "jdbc:sqlite:vestibular.db";
 
 	    public void inserir(PalavraChave palavraChave) {
 	        String sql = "INSERT INTO palavras_chave (palavra, descricao, materia, assunto) VALUES (?, ?, ?, ?)";
 
-	        try (Connection conn = DriverManager.getConnection(URL);
+	        try (Connection conn = DataBase.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	            pstmt.setString(1, palavraChave.getPalavra());
 	            pstmt.setString(2, palavraChave.getDescricao());
@@ -33,7 +33,7 @@ public class PalavraChaveDAO {
 	        List<PalavraChave> palavrasChave = new ArrayList<>();
 	        String sql = "SELECT * FROM palavras_chave WHERE materia = ?";
 
-	        try (Connection conn = DriverManager.getConnection(URL);
+	        try (Connection conn = DataBase.getConnection();
 	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	            pstmt.setString(1, materia);
 	            ResultSet rs = pstmt.executeQuery();

@@ -29,15 +29,24 @@ public class CronogramaViewController {
 		String assunto = campoAssunto.getText();
 		boolean concluido = checkConcluido.isSelected();
 
+		if (diaSemana.isEmpty() || horario.isEmpty() || materia.isEmpty() || assunto.isEmpty()) {
+            System.out.println("Preencha todos os campos!");
+            return;
+        }
 		Cronograma cronograma = new Cronograma(diaSemana, horario, materia, assunto);
 		cronograma.setConcluido(concluido);
 		cronogramaDAO.inserir(cronograma);
 
 		// Limpar campos após salvar
-		campoDiaSemana.clear();
-		campoHorario.clear();
-		campoMateria.clear();
-		campoAssunto.clear();
-		checkConcluido.setSelected(false);
+        System.out.println("Bloco salvo com sucesso!");
+		limparCampos();
 	}
+	private void limparCampos() {
+        campoDiaSemana.clear();
+        campoHorario.clear();
+        campoMateria.clear();
+        campoAssunto.clear();
+        checkConcluido.setSelected(false);
+    }
+	
 }
