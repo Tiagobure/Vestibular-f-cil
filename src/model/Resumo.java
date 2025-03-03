@@ -7,6 +7,7 @@ public class Resumo {
 	private String materia;
 	private String assunto;
 	private String anexo; // Caminho do arquivo ou link
+	private int usuarioId;
 
 	// Construtor, getters e setters
 	public Resumo(String titulo, String texto, String materia, String assunto) {
@@ -64,4 +65,14 @@ public class Resumo {
 	public void setAnexo(String anexo) {
 		this.anexo = anexo;
 	}
+
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+	
+	
 }

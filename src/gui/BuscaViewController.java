@@ -26,6 +26,12 @@ public class BuscaViewController {
 
 	private ResumoDAO resumoDAO = new ResumoDAO();
 	private PalavraChaveDAO palavraChaveDAO = new PalavraChaveDAO();
+	
+	private int usuarioId; // ID do usuário logado
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
 
 	@FXML
 	public void initialize() {
@@ -75,7 +81,7 @@ public class BuscaViewController {
 	}
 
 	private void buscarResumos(String termo) {
-		List<Resumo> resultados = resumoDAO.buscarPorTermo(termo); // Método que você já implementou
+		List<Resumo> resultados = resumoDAO.buscarPorTermo(termo, usuarioId); // Método que você já implementou
 
 		if (resultados.isEmpty()) {
 			mensagemFeedback.setText("Nenhum resumo encontrado para: " + termo);
@@ -86,7 +92,7 @@ public class BuscaViewController {
 	}
 
 	private void buscarPalavrasChave(String termo) {
-		List<PalavraChave> resultados = palavraChaveDAO.buscarPorTermo(termo);
+		List<PalavraChave> resultados = palavraChaveDAO.buscarPorTermo(termo, usuarioId);
 
 		if (resultados.isEmpty()) {
 			mensagemFeedback.setText("Nenhuma palavra-chave encontrada para: " + termo);

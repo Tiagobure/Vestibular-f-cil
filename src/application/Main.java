@@ -9,11 +9,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Usuario;
+import model.dao.UsuarioDAO;
 
 public class Main extends Application {
 
 	private static Scene mainScene;
 
+	
 	@Override
 	public void start(Stage primaryStage) {
 		// inicializarBancoDeDados();
@@ -56,5 +59,14 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+		
+		
+	UsuarioDAO usuarioDAO = new UsuarioDAO();
+    Usuario usuarioTeste = new Usuario("teste", "123456"); // Nome: teste | Senha: 123456
+    usuarioDAO.cadastrarUsuario(usuarioTeste);
+	System.out.println("Usuário de teste criado com sucesso!");
+		    
+		
+
 	}
 }

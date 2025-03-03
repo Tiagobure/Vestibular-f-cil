@@ -1,7 +1,6 @@
 package model.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,84 +11,71 @@ import db.DataBase;
 import model.PalavraChave;
 
 public class PalavraChaveDAO {
-	
 
-	    public void inserir(PalavraChave palavraChave) {
-	        String sql = "INSERT INTO palavras_chave (palavra, descricao, materia, assunto) VALUES (?, ?, ?, ?)";
+	public void inserir(PalavraChave palavraChave, int usuarioId) {
+		String sql = "INSERT INTO palavras_chave (palavra, descricao, materia, assunto, usuario_id) VALUES (?, ?, ?, ?, ?)";
 
-	        try (Connection conn = DataBase.getConnection();
-	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setString(1, palavraChave.getPalavra());
-	            pstmt.setString(2, palavraChave.getDescricao());
-	            pstmt.setString(3, palavraChave.getMateria());
-	            pstmt.setString(4, palavraChave.getAssunto());
-	            pstmt.executeUpdate();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, palavraChave.getPalavra());
+			pstmt.setString(2, palavraChave.getDescricao());
+			pstmt.setString(3, palavraChave.getMateria());
+			pstmt.setString(4, palavraChave.getAssunto());
+			pstmt.setInt(5, usuarioId);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
-	    public List<PalavraChave> listarPorMateria(String materia) {
-	        List<PalavraChave> palavrasChave = new ArrayList<>();
-	        String sql = "SELECT * FROM palavras_chave WHERE materia = ?";
+	public List<PalavraChave> listarPorMateria(String materia, int usuarioId) {
+		List<PalavraChave> palavrasChave = new ArrayList<>();
+		String sql = "SELECT * FROM palavras_chave WHERE materia = ? AND usuario_id = ?";
 
-	        try (Connection conn = DataBase.getConnection();
-	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	            pstmt.setString(1, materia);
-	            ResultSet rs = pstmt.executeQuery();
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, materia);
+			pstmt.setInt(2, usuarioId);
+			ResultSet rs = pstmt.executeQuery();
 
-	            while (rs.next()) {
-	                PalavraChave pc = new PalavraChave(
-	                    rs.getString("palavra"),
-	                    rs.getString("descricao"),
-	                    rs.getString("materia"),
-	                    rs.getString("assunto")
-	                );
-	                pc.setId(rs.getInt("id"));
-	                palavrasChave.add(pc);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+			while (rs.next()) {
+				PalavraChave pc = new PalavraChave(rs.getString("palavra"), rs.getString("descricao"),
+						rs.getString("materia"), rs.getString("assunto"));
+				pc.setId(rs.getInt("id"));
+				palavrasChave.add(pc);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-	        return palavrasChave;
-	    }
-	    
-	    public List<PalavraChave> buscarPorTermo(String termo) {
-	        List<PalavraChave> palavrasChave = new ArrayList<>();
-	        String sql = "SELECT * FROM palavras_chave WHERE " +
-	                     "palavra LIKE ? OR " +
-	                     "descricao LIKE ? OR " +
-	                     "materia LIKE ? OR " +
-	                     "assunto LIKE ?";
+		return palavrasChave;
+	}
 
-	        try (Connection conn = DataBase.getConnection();
-	             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	public List<PalavraChave> buscarPorTermo(String termo, int usuarioId) {
+		List<PalavraChave> palavrasChave = new ArrayList<>();
+		String sql = "SELECT * FROM palavras_chave WHERE usuario_id = ? AND (" + "LOWER(palavra) LIKE LOWER(?) OR "
+				+ "LOWER(descricao) LIKE LOWER(?) OR " + "LOWER(materia) LIKE LOWER(?) OR "
+				+ "LOWER(assunto) LIKE LOWER(?))";
 
-	            // Adiciona o termo de busca em cada campo
-	            String termoBusca = "%" + termo + "%"; // Usamos % para buscar parcialmente
-	            pstmt.setString(1, termoBusca);
-	            pstmt.setString(2, termoBusca);
-	            pstmt.setString(3, termoBusca);
-	            pstmt.setString(4, termoBusca);
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-	            ResultSet rs = pstmt.executeQuery();
+			String termoBusca = "%" + termo + "%";
+			pstmt.setInt(1, usuarioId);
+			pstmt.setString(2, termoBusca);
+			pstmt.setString(3, termoBusca);
+			pstmt.setString(4, termoBusca);
+			pstmt.setString(5, termoBusca);
 
-	            while (rs.next()) {
-	                PalavraChave pc = new PalavraChave(
-	                    rs.getString("palavra"),
-	                    rs.getString("descricao"),
-	                    rs.getString("materia"),
-	                    rs.getString("assunto")
-	                );
-	                pc.setId(rs.getInt("id"));
-	                palavrasChave.add(pc);
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+			ResultSet rs = pstmt.executeQuery();
 
-	        return palavrasChave;
-	    }
-	   
+			while (rs.next()) {
+				PalavraChave pc = new PalavraChave(rs.getString("palavra"), rs.getString("descricao"),
+						rs.getString("materia"), rs.getString("assunto"));
+				pc.setId(rs.getInt("id"));
+				palavrasChave.add(pc);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return palavrasChave;
+	}
 }

@@ -9,7 +9,7 @@ public class Simulado {
 	private int tempoRestante; // Em segundos
 	private int acertos;
 	private int erros;
-
+	private int usuarioId;
 	// Construtor
 	public Simulado(String vestibularSelecionado, List<Questao> questoes, int tempoTotal) {
 		this.vestibularSelecionado = vestibularSelecionado;
@@ -80,4 +80,15 @@ public class Simulado {
     public void setErros(int erros) {
         this.erros = erros;
     }
+
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+    
+    
+    
 }

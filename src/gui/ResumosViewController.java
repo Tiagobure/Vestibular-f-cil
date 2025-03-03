@@ -1,6 +1,8 @@
 package gui;
 
+import gui.util.Alerts;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Resumo;
@@ -19,6 +21,11 @@ public class ResumosViewController {
 	private TextField campoAnexo;
 
 	private ResumoDAO resumoDAO = new ResumoDAO();
+	private int usuarioId; // ID do usuário logado
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
 
 	@FXML
 	public void initialize() {
@@ -40,13 +47,13 @@ public class ResumosViewController {
 		String anexo = campoAnexo.getText();
 
 		if (titulo.isEmpty() || texto.isEmpty() || materia.isEmpty() || assunto.isEmpty()) {
-			System.out.println("Preencha todos os campos!");
+			Alerts.showAlert("Aviso", null, "Campos em branco", AlertType.WARNING);
 			return;
 		}
 
 		Resumo resumo = new Resumo(titulo, texto, materia, assunto);
 		resumo.setAnexo(anexo);
-		resumoDAO.inserir(resumo);
+		resumoDAO.inserir(resumo, usuarioId);
 
 		// Limpar campos após salvar
 		System.out.println("Resumo salvo com sucesso!");

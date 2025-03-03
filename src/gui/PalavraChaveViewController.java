@@ -17,6 +17,12 @@ public class PalavraChaveViewController {
 	private TextField campoAssunto;
 
 	private PalavraChaveDAO palavraChaveDAO = new PalavraChaveDAO();
+	
+	private int usuarioId; // ID do usuário logado
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
 
 	@FXML
 	public void initialize() {
@@ -40,7 +46,7 @@ public class PalavraChaveViewController {
 		}
 
 		PalavraChave palavraChave = new PalavraChave(palavra, descricao, materia, assunto);
-		palavraChaveDAO.inserir(palavraChave);
+		palavraChaveDAO.inserir(palavraChave, usuarioId);
 
 		System.out.println("Palavra-chave salva com sucesso!");
 		limparCampos();

@@ -5,7 +5,6 @@ import java.util.List;
 import application.Main;
 import gui.util.Alerts;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
@@ -31,6 +30,12 @@ public class CronogramaViewController {
 	@FXML
 	private ListView<String> listaCronograma;
 
+	private int usuarioId; // ID do usuário logado
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+	
 	public CronogramaViewController() {
 		// Injeção de dependência 
 		this.cronogramaDAO = new CronogramaDAO(); 
@@ -83,7 +88,7 @@ public class CronogramaViewController {
 
 	private void atualizarCronograma() {
 		listaCronograma.getItems().clear();
-		List<Cronograma> blocos = cronogramaDAO.listarTodos();
+		List<Cronograma> blocos = cronogramaDAO.listarTodos(usuarioId);
 
 		for (Cronograma bloco : blocos) {
 			String status = bloco.isConcluido() ? "[Concluído] " : "[Pendente] ";

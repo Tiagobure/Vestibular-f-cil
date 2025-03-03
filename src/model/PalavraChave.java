@@ -6,6 +6,7 @@ public class PalavraChave {
 	private String descricao;
 	private String materia;
 	private String assunto;
+	private int usuarioId;
 
 	// Construtor, getters e setters
 	public PalavraChave(String palavra, String descricao, String materia, String assunto) {
@@ -55,4 +56,14 @@ public class PalavraChave {
 	public void setAssunto(String assunto) {
 		this.assunto = assunto;
 	}
+
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+	
+	
 }

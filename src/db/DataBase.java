@@ -12,10 +12,10 @@ public class DataBase {
    
     // Queries SQL
     private static final String CREATE_TABLE_USUARIOS = 
-        "CREATE TABLE IF NOT EXISTS usuarios ("
-        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        + "nome TEXT NOT NULL UNIQUE, "
-        + "senha TEXT NOT NULL)";
+    	"CREATE TABLE IF NOT EXISTS usuarios ("
+    	 +"  id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    	 +" nome TEXT NOT NULL UNIQUE, "
+    	 +"senha TEXT NOT NULL CHECK (LENGTH(senha) >= 60)";
 
     private static final String CREATE_TABLE_QUESTOES = 
         "CREATE TABLE IF NOT EXISTS questoes ("
@@ -33,7 +33,9 @@ public class DataBase {
         + "texto TEXT NOT NULL, "
         + "materia TEXT NOT NULL, "
         + "assunto TEXT NOT NULL, "
-        + "anexo TEXT)";
+        + "anexo TEXT, "
+        + "usuario_id INTEGER NOT NULL, "
+        + "FOREIGN KEY (usuario_id) REFERENCES usuarios(id))";
 
     private static final String CREATE_TABLE_PALAVRAS_CHAVE = 
         "CREATE TABLE IF NOT EXISTS palavras_chave ("
@@ -41,16 +43,30 @@ public class DataBase {
         + "palavra TEXT NOT NULL, "
         + "descricao TEXT, "
         + "materia TEXT NOT NULL, "
-        + "assunto TEXT NOT NULL)";
+        + "assunto TEXT NOT NULL, "
+        + "usuario_id INTEGER NOT NULL, "
+        + "FOREIGN KEY (usuario_id) REFERENCES usuarios(id))";
 
     private static final String CREATE_TABLE_CRONOGRAMA = 
-        "CREATE TABLE IF NOT EXISTS cronograma ("
-        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        + "diaSemana TEXT NOT NULL, "
-        + "horario TEXT NOT NULL, "
-        + "materia TEXT NOT NULL, "
-        + "assunto TEXT NOT NULL, "
-        + "concluido BOOLEAN NOT NULL)";
+    	    "CREATE TABLE IF NOT EXISTS cronograma ("
+    	    + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    	    + "diaSemana TEXT NOT NULL, "
+    	    + "horario TEXT NOT NULL, "
+    	    + "materia TEXT NOT NULL, "
+    	    + "assunto TEXT NOT NULL, "
+    	    + "concluido BOOLEAN NOT NULL, " 
+    	    + "usuario_id INTEGER NOT NULL, "
+    	    + "FOREIGN KEY (usuario_id) REFERENCES usuarios(id))";
+    
+    private static final String CREATE_TABLE_RESULTADOS_SIMULADO = 
+    	 "CREATE TABLE IF NOT EXISTS resultados_simulado ("
+    	 + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    	 + "usuario_id INTEGER NOT NULL, "
+    	 + "vestibular TEXT NOT NULL, "
+    	 + "acertos INTEGER NOT NULL, "
+    	 + "erros INTEGER NOT NULL, "
+    	 + "tempo_restante INTEGER NOT NULL, "
+    	 + "FOREIGN KEY (usuario_id) REFERENCES usuarios(id))";
 
     public static void init() {
         try (Connection conn = DriverManager.getConnection(URL); 
@@ -67,6 +83,8 @@ public class DataBase {
             stmt.execute(CREATE_TABLE_PALAVRAS_CHAVE);
             System.out.println("Criando tabela 'cronograma'...");
             stmt.execute(CREATE_TABLE_CRONOGRAMA);
+            System.out.println("Criando tabela 'resultados_simulado'...");
+            stmt.execute(CREATE_TABLE_RESULTADOS_SIMULADO); //
             
             //Verifica se as tabelas foram criadas
             ResultSet rs = conn.getMetaData().getTables(null, null, "%", null);
