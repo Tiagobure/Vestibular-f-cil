@@ -1,6 +1,7 @@
 package gui;
 
 import java.util.List;
+import java.util.Stack;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -20,14 +21,17 @@ public class BuscaViewController {
 	@FXML
 	private ComboBox<String> comboTipoBusca;
 	@FXML
-	private ListView<Object> listaResultados; // Usamos Object para suportar Resumo e PalavraChave
+	private ListView<Object> listaResultados; // Suporta Resumo e PalavraChave
 	@FXML
 	private Label mensagemFeedback;
 
 	private ResumoDAO resumoDAO = new ResumoDAO();
 	private PalavraChaveDAO palavraChaveDAO = new PalavraChaveDAO();
-	
+
 	private int usuarioId; // ID do usuário logado
+
+	private Stack<String> historicoPesquisas = new Stack<>(); // Pilha para armazenar buscas passadas
+	private Stack<String> pesquisasFuturas = new Stack<>(); // Pilha para armazenar pesquisas que podem ser avançadas
 
 	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
@@ -35,11 +39,9 @@ public class BuscaViewController {
 
 	@FXML
 	public void initialize() {
-		// Configura as opções do ComboBox
 		comboTipoBusca.getItems().addAll("Resumos", "Palavras-Chave");
-		comboTipoBusca.getSelectionModel().selectFirst(); // Seleciona a primeira opção por padrão
+		comboTipoBusca.getSelectionModel().selectFirst();
 
-		// Configura como os itens serão exibidos na lista
 		listaResultados.setCellFactory(param -> new ListCell<Object>() {
 			@Override
 			protected void updateItem(Object item, boolean empty) {
@@ -65,12 +67,24 @@ public class BuscaViewController {
 	@FXML
 	private void buscar() {
 		String termo = campoBusca.getText().trim();
-		String tipoBusca = comboTipoBusca.getValue(); // Obtém o tipo de busca selecionado
+		String tipoBusca = comboTipoBusca.getValue();
 		listaResultados.getItems().clear();
 
 		if (termo.isEmpty()) {
 			mensagemFeedback.setText("Digite um termo para buscar!");
 			return;
+		}
+
+		// Adiciona a pesquisa atual ao histórico e limpa a pilha de pesquisas futuras
+		if (!historicoPesquisas.isEmpty()) {
+			String ultimaBusca = historicoPesquisas.peek();
+			if (!ultimaBusca.equals(termo)) { // Evita salvar buscas duplicadas seguidas
+				historicoPesquisas.push(termo);
+				pesquisasFuturas.clear(); // Se fizer uma nova busca, limpa os "avanços"
+			}
+		} else {
+			historicoPesquisas.push(termo);
+			pesquisasFuturas.clear();
 		}
 
 		if (tipoBusca.equals("Resumos")) {
@@ -81,7 +95,7 @@ public class BuscaViewController {
 	}
 
 	private void buscarResumos(String termo) {
-		List<Resumo> resultados = resumoDAO.buscarPorTermo(termo, usuarioId); // Método que você já implementou
+		List<Resumo> resultados = resumoDAO.buscarPorTermo(termo, usuarioId);
 
 		if (resultados.isEmpty()) {
 			mensagemFeedback.setText("Nenhum resumo encontrado para: " + termo);
@@ -104,9 +118,25 @@ public class BuscaViewController {
 
 	@FXML
 	private void voltar() {
-		/* Lógica de navegação */ }
+		if (historicoPesquisas.size() > 1) {
+			pesquisasFuturas.push(historicoPesquisas.pop()); // Salva a busca atual na pilha de futuros
+			String ultimaBusca = historicoPesquisas.peek(); // Obtém a busca anterior
+			campoBusca.setText(ultimaBusca); // Atualiza o campo de busca
+			buscar(); // Refaz a busca
+		} else {
+			mensagemFeedback.setText("Não há pesquisas anteriores!");
+		}
+	}
 
 	@FXML
 	private void avancar() {
-		/* Lógica de navegação */ }
+		if (!pesquisasFuturas.isEmpty()) {
+			String proximaBusca = pesquisasFuturas.pop(); // Recupera a busca futura
+			historicoPesquisas.push(proximaBusca); // Adiciona de volta ao histórico
+			campoBusca.setText(proximaBusca); // Atualiza o campo de busca
+			buscar(); // Refaz a busca
+		} else {
+			mensagemFeedback.setText("Não há pesquisas futuras para avançar!");
+		}
+	}
 }

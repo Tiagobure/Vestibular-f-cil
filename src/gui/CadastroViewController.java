@@ -2,6 +2,8 @@ package gui;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import model.Usuario;
@@ -16,6 +18,8 @@ public class CadastroViewController {
 
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
+	@FXML
+	private Button botaoCadastrar;
 	@FXML
 	private void cadastrarUsuario() {
 		String nome = campoNome.getText().trim();
@@ -38,6 +42,9 @@ public class CadastroViewController {
 			usuarioDAO.cadastrarUsuario(usuario);
 			Alerts.showAlert("Sucesso", null,"Usuário cadastrado com sucesso!", AlertType.INFORMATION);
 			limparCampos();
+			
+			Stage stage = (Stage) botaoCadastrar.getScene().getWindow();
+			stage.close();
 		} catch (Exception e) {
 			Alerts.showAlert("Erro", null, "Nome de usuário já cadastrado!", AlertType.ERROR);
 		}

@@ -1,13 +1,16 @@
 package gui;
 
 import application.Main;
+import gui.util.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.Usuario;
 import model.dao.UsuarioDAO;
-import gui.util.*;
+import db.DbException;
 
 public class LoginViewController {
 
@@ -21,6 +24,8 @@ public class LoginViewController {
 	private TextField campoNome;
 	@FXML
 	private PasswordField campoSenha;
+	@FXML
+	private Button botaoLogin;
 
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
@@ -29,19 +34,25 @@ public class LoginViewController {
 		String nome = campoNome.getText().trim();
 		String senha = campoSenha.getText().trim();
 
+		// Validação dos campos
 		if (nome.isEmpty() || senha.isEmpty()) {
 			Alerts.showAlert("Erro", null, "Preencha todos os campos!", AlertType.ERROR);
-			;
 			return;
 		}
 
-		Usuario usuario = usuarioDAO.fazerLogin(nome, senha);
+		try {
+			// Tenta fazer o login
+			Usuario usuario = usuarioDAO.fazerLogin(nome, senha);
 
-		if (usuario != null) {
-			Alerts.showAlert("Sucesso", null, "Bem-vindo, " + usuario.getNome() + "!", AlertType.INFORMATION);
+			// Se o login for bem-sucedido, abre a tela principal
 			abrirMainView();
-		} else {
-			Alerts.showAlert("Erro", null, "Nome ou senha incorretos!", AlertType.ERROR);
+
+			// Fecha a tela de login
+			Stage stage = (Stage) botaoLogin.getScene().getWindow();
+			stage.close();
+		} catch (DbException e) {
+			// Exibe mensagem de erro em caso de falha no login
+			Alerts.showAlert("Erro", null, e.getMessage(), AlertType.ERROR);
 		}
 	}
 
@@ -63,5 +74,4 @@ public class LoginViewController {
 			e.printStackTrace();
 		}
 	}
-
 }

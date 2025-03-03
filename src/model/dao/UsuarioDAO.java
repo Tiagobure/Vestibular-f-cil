@@ -9,14 +9,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.DataBase;
-import gui.util.Alerts;
-import javafx.scene.control.Alert.AlertType;
+import db.DbException;
 import model.Usuario;
 
 public class UsuarioDAO {
 
 	// Cadastra um novo usuário com senha criptografada
 	public void cadastrarUsuario(Usuario usuario) {
+		// Verifica se o usuário já existe
+		if (usuarioExiste(usuario.getNome())) {
+			throw new DbException("Usuário já cadastrado.");
+		}
+
 		String sql = "INSERT INTO usuarios (nome, senha) VALUES (?, ?)";
 
 		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -24,7 +28,7 @@ public class UsuarioDAO {
 			pstmt.setString(2, hashSenha(usuario.getSenha())); // Armazena a senha criptografada
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DbException("Erro ao cadastrar usuário: " + e.getMessage());
 		}
 	}
 
@@ -42,17 +46,28 @@ public class UsuarioDAO {
 					Usuario usuario = new Usuario(rs.getString("nome"), senha);
 					usuario.setId(rs.getInt("id"));
 					return usuario;
+				} else {
+					throw new DbException("Senha incorreta.");
 				}
+			} else {
+				throw new DbException("Usuário não encontrado.");
 			}
-
-			// Mensagem genérica para evitar vazamento de informações
-			Alerts.showAlert("Erro de autenticação", "Nome ou senha incorretos", "Tente novamente.",
-					AlertType.INFORMATION);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DbException("Erro ao fazer login: " + e.getMessage());
 		}
+	}
 
-		return null; // Retorna null se o login falhar
+	// Verifica se um usuário já existe no banco de dados
+	public boolean usuarioExiste(String nome) {
+		String sql = "SELECT id FROM usuarios WHERE nome = ?";
+
+		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, nome);
+			ResultSet rs = pstmt.executeQuery();
+			return rs.next(); // Retorna true se o usuário existir
+		} catch (SQLException e) {
+			throw new DbException("Erro ao verificar usuário existente: " + e.getMessage());
+		}
 	}
 
 	// Gera um hash SHA-256 para a senha
