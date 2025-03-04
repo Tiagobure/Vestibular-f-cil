@@ -1,22 +1,32 @@
 package application;
 
 import java.io.IOException;
+import java.util.Map;
 
 import db.DataBase;
+import gui.CronogramaViewController;
 import gui.LoginViewController;
-import gui.MainViewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Cronograma;
 
 public class Main extends Application {
 
 	private static Scene mainScene;
+	private int usuarioId; // ID do usuário logado
 
-	
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
 		// inicializarBancoDeDados();
@@ -40,17 +50,36 @@ public class Main extends Application {
 		}
 	}
 
-	public void carregarTela(String fxml, String titulo) {
+	public void carregarTela(String fxml, String titulo, Map<String, Object> params) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 			Parent root = loader.load();
-			// Obtém o controlador da tela carregada
-	        Object controller = loader.getController();
 
-	        // Se o controlador for uma instância de MainViewController, define a referência do Main
-	        if (controller instanceof MainViewController) {
-	            ((MainViewController) controller).setMainApp(this);
-	        }
+			// Obtém o controlador da tela carregada
+			Object controller = loader.getController();
+
+			// Passa a referência do Main para todos os controladores que implementam
+			// MainAppAware
+			if (controller instanceof MainAppAware) {
+				((MainAppAware) controller).setMainApp(this);
+			}
+
+			// Passa parâmetros específicos para o CronogramaViewController
+			if (controller instanceof CronogramaViewController && params != null) {
+				CronogramaViewController cronogramaController = (CronogramaViewController) controller;
+
+				// Verifica se a chave "cronograma" existe no mapa
+				if (params.containsKey("cronograma")) {
+					cronogramaController.setCronogramaSelecionado((Cronograma) params.get("cronograma"));
+				}
+
+				// Verifica se a chave "usuarioId" existe no mapa
+				if (params.containsKey("usuarioId")) {
+					cronogramaController.setUsuarioId((int) params.get("usuarioId"));
+				}
+			}
+
+			// Configura a cena e a janela
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle(titulo);
@@ -59,19 +88,15 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static Scene getMainScene() {
 		return mainScene;
 	}
 
 	public static void main(String[] args) {
-		
+
 		DataBase.init();
 		launch(args);
-		
-		
-		    
-		
 
 	}
 }

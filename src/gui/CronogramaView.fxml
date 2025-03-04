@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CronogramaViewController">
+<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20; -fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.CronogramaViewController">
 
     <!-- Título -->
     <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" text="Cronograma de Estudos" />

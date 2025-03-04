@@ -1,6 +1,7 @@
 package gui;
 
 import application.Main;
+import application.MainAppAware;
 import gui.util.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
@@ -12,7 +13,7 @@ import model.Usuario;
 import model.dao.UsuarioDAO;
 import db.DbException;
 
-public class LoginViewController {
+public class LoginViewController implements MainAppAware {
 
 	private Main mainApp;
 
@@ -58,7 +59,7 @@ public class LoginViewController {
 
 	private void abrirMainView() {
 		try {
-			mainApp.carregarTela("/gui/MainView.fxml", "Avançar Vestibular");
+			mainApp.carregarTela("/gui/MainView.fxml", "Avançar Vestibular", null);
 		} catch (Exception e) {
 			Alerts.showAlert("Erro", null, "Não foi possível abrir a tela principal!", AlertType.ERROR);
 			e.printStackTrace();
@@ -68,7 +69,7 @@ public class LoginViewController {
 	@FXML
 	private void abrirCadastro() {
 		try {
-			mainApp.carregarTela("/gui/CadastroView.fxml", "Cadastro");
+			mainApp.carregarTela("/gui/CadastroView.fxml", "Cadastro", null);
 		} catch (Exception e) {
 			Alerts.showAlert("Erro", null, "Não foi possível abrir a tela de cadastro!", AlertType.ERROR);
 			e.printStackTrace();

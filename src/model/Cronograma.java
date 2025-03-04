@@ -71,4 +71,9 @@ public class Cronograma {
 	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
+	
+	@Override
+    public String toString() {
+        return String.format("%s - %s: %s (%s)", diaSemana, horario, materia, assunto);
+    }
 }

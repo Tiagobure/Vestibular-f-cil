@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 import application.Main;
+import application.MainAppAware;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class MainViewController {
+public class MainViewController implements MainAppAware{
 
 	private Main mainApp;
 
@@ -124,27 +125,27 @@ public class MainViewController {
 
 	@FXML
 	private void abrirSimulados() {
-		mainApp.carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados");
+		mainApp.carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados", null);
 	}
 
 	@FXML
 	private void abrirResumos() {
-		mainApp.carregarTela("/gui/ResumosView.fxml", "Resumos");
+		mainApp.carregarTela("/gui/ResumosView.fxml", "Resumos", null);
 	}
 
 	@FXML
 	private void abrirPalavrasChave() {
-		mainApp.carregarTela("/gui/PalavrasChaveView.fxml", "Palavras-Chave");
+		mainApp.carregarTela("/gui/PalavrasChaveView.fxml", "Palavras-Chave", null);
 	}
 
 	@FXML
 	private void abrirCronograma() {
-		mainApp.carregarTela("/gui/MostrarCronogramaView.fxml", "Cronograma");
+		mainApp.carregarTela("/gui/MostrarCronogramaView.fxml", "Cronograma", null);
 	}
 
 	@FXML
 	private void abrirBusca() {
-		mainApp.carregarTela("/gui/BuscaView.fxml", "Busca");
+		mainApp.carregarTela("/gui/BuscaView.fxml", "Busca", null);
 	}
 
 	@FXML

@@ -1,6 +1,12 @@
 package gui;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import application.Main;
+import application.MainAppAware;
+import gui.util.Alerts;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,13 +14,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import model.Cronograma;
+import model.dao.CronogramaDAO;
 
-public class MostrarCronogramaViewController {
+public class MostrarCronogramaViewController implements MainAppAware {
 
 	private Main mainApp;
 
-	// Lista de cronogramas
-	private ObservableList<String> cronogramas;
+	// Lista de cronogramas (strings para exibição)
+	private ObservableList<String> cronogramas = FXCollections.observableArrayList();
+
+	// Lista de objetos Cronograma
+	private List<Cronograma> listaCronogramaObjetos;
 
 	// FXML
 	@FXML
@@ -28,13 +39,17 @@ public class MostrarCronogramaViewController {
 
 	@FXML
 	private Button deletarCronogramaButton;
-	
-	@FXML
-	private
+
+	private CronogramaDAO cronogramaDAO = new CronogramaDAO();
+
+	private int usuarioId;
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
+	}
 
 	public void setMainApp(Main mainApp) {
 		this.mainApp = mainApp;
-		cronogramas = FXCollections.observableArrayList(); // Inicializa a lista de cronogramas
 		carregarCronogramas(); // Carrega cronogramas ao iniciar
 	}
 
@@ -50,46 +65,77 @@ public class MostrarCronogramaViewController {
 
 	// Carrega os cronogramas
 	private void carregarCronogramas() {
-		// Aqui você carrega os cronogramas de um banco de dados ou arquivo.
-		// Como exemplo, adicionamos alguns cronogramas fictícios:
-		cronogramas.addAll("Cronograma 1", "Cronograma 2", "Cronograma 3");
+		int usuarioId = obterUsuarioId(); // Obtém o ID do usuário logado
+		listaCronogramaObjetos = cronogramaDAO.listarTodos(usuarioId);
+
+		// Limpa a lista atual e adiciona os novos cronogramas
+		cronogramas.clear();
+		for (Cronograma c : listaCronogramaObjetos) {
+			cronogramas.add(c.toString()); // Converte Cronograma para String
+		}
+	}
+
+	// Obtém o ID do usuário logado
+	private int obterUsuarioId() {
+		// Implemente a lógica para obter o ID do usuário logado
+		return usuarioId;
 	}
 
 	// Abre a janela de cadastro de um novo cronograma
 	@FXML
 	private void abrirCadastroCronograma() {
-		mainApp.carregarTela("/gui/CronogramaView.fxml", "Novo Cronograma");
+		try {
+			mainApp.carregarTela("/gui/CronogramaView.fxml", "Novo Cronograma", null);
+		} catch (Exception e) {
+			Alerts.showAlert("Erro", null, "Não foi possível abrir a tela principal!", AlertType.ERROR);
+			e.printStackTrace();
+		}
 	}
 
 	// Edita o cronograma selecionado
 	@FXML
 	private void editarCronograma() {
-		String cronogramaSelecionado = listaCronograma.getSelectionModel().getSelectedItem();
-		if (cronogramaSelecionado != null) {
-			mainApp.carregarTela("/gui/CronogramaView.fxml", "Editar Cronograma");
-			// Você pode passar o cronograma selecionado para a tela de edição.
-		} else {
-			alerta("Selecione um cronograma", "Por favor, selecione um cronograma para editar.");
+		if (verificarSelecao()) {
+			int indiceSelecionado = listaCronograma.getSelectionModel().getSelectedIndex();
+			Cronograma cronogramaSelecionado = listaCronogramaObjetos.get(indiceSelecionado);
+
+			Map<String, Object> params = new HashMap<>();
+			params.put("cronograma", cronogramaSelecionado);
+			params.put("usuarioId", usuarioId);
+			try {
+				mainApp.carregarTela("/gui/CronogramaView.fxml", "Editar Cronograma", params);
+			} catch (Exception e) {
+				Alerts.showAlert("Erro", null, "não foi possivel abrir ", AlertType.ERROR);
+				e.printStackTrace();
+			}
 		}
+
 	}
 
 	// Deleta o cronograma selecionado
 	@FXML
 	private void deletarCronograma() {
-		String cronogramaSelecionado = listaCronograma.getSelectionModel().getSelectedItem();
-		if (cronogramaSelecionado != null) {
-			cronogramas.remove(cronogramaSelecionado);
-		} else {
-			alerta("Selecione um cronograma", "Por favor, selecione um cronograma para deletar.");
+		if (verificarSelecao()) {
+			int indiceSelecionado = listaCronograma.getSelectionModel().getSelectedIndex();
+			Cronograma cronogramaSelecionado = listaCronogramaObjetos.get(indiceSelecionado);
+
+			// Remove do banco de dados
+			cronogramaDAO.deletar(cronogramaSelecionado.getId(), obterUsuarioId());
+
+			// Remove da lista de objetos e da lista de strings
+			listaCronogramaObjetos.remove(indiceSelecionado);
+			cronogramas.remove(indiceSelecionado);
 		}
 	}
 
-	// Exibe um alerta
-	private void alerta(String titulo, String mensagem) {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(titulo);
-		alert.setHeaderText(null);
-		alert.setContentText(mensagem);
-		alert.showAndWait();
+	// Verifica se um cronograma foi selecionado
+	private boolean verificarSelecao() {
+		if (listaCronograma.getSelectionModel().getSelectedItem() == null) {
+			Alerts.showAlert("Selecione um cronograma", null, "Por favor, selecione um cronograma.",
+					AlertType.INFORMATION);
+			return false;
+		}
+		return true;
 	}
+
 }
