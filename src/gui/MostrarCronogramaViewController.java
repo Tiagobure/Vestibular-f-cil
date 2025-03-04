@@ -1,74 +1,95 @@
 package gui;
 
-import java.io.IOException;
-
+import application.Main;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 
 public class MostrarCronogramaViewController {
 
+	private Main mainApp;
+
+	// Lista de cronogramas
+	private ObservableList<String> cronogramas;
+
+	// FXML
 	@FXML
-	private ListView<String> listaCronograma; // ListView para exibir os cronogramas
+	private ListView<String> listaCronograma;
 
 	@FXML
-	private Button botaoAtualizar; // Botão para atualizar a lista
+	private Button novoCronogramaButton;
 
 	@FXML
-	private Button botaoNovoCronograma; // Botão para abrir a tela de cadastro
+	private Button editarCronogramaButton;
 
 	@FXML
-	private void initialize() {
-		// Inicializa a lista de cronogramas (pode ser carregada de um banco de dados ou
-		// serviço)
-		atualizarListaCronograma();
+	private Button deletarCronogramaButton;
+	
+	@FXML
+	private
+
+	public void setMainApp(Main mainApp) {
+		this.mainApp = mainApp;
+		cronogramas = FXCollections.observableArrayList(); // Inicializa a lista de cronogramas
+		carregarCronogramas(); // Carrega cronogramas ao iniciar
 	}
 
-	// Método para atualizar a lista de cronogramas
 	@FXML
-	private void atualizarCronograma() {
-		System.out.println("Atualizando cronograma...");
-		atualizarListaCronograma();
+	public void initialize() {
+		listaCronograma.setItems(cronogramas); // Vincula a lista ao ListView
+
+		// Adiciona ações para os botões
+		novoCronogramaButton.setOnAction(event -> abrirCadastroCronograma());
+		editarCronogramaButton.setOnAction(event -> editarCronograma());
+		deletarCronogramaButton.setOnAction(event -> deletarCronograma());
 	}
 
-	// Método para abrir a tela de cadastro de novo cronograma
+	// Carrega os cronogramas
+	private void carregarCronogramas() {
+		// Aqui você carrega os cronogramas de um banco de dados ou arquivo.
+		// Como exemplo, adicionamos alguns cronogramas fictícios:
+		cronogramas.addAll("Cronograma 1", "Cronograma 2", "Cronograma 3");
+	}
+
+	// Abre a janela de cadastro de um novo cronograma
 	@FXML
 	private void abrirCadastroCronograma() {
-		try {
-			// Carrega o arquivo FXML da tela de cadastro
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/CronogramaView.fxml"));
-			Parent root = loader.load();
+		mainApp.carregarTela("/gui/CronogramaView.fxml", "Novo Cronograma");
+	}
 
-			// Cria uma nova cena
-			Scene scene = new Scene(root);
-
-			// Cria um novo estágio (janela) para a tela de cadastro
-			Stage stage = new Stage();
-			stage.setTitle("Cronograma de Estudos");
-			stage.setScene(scene);
-
-			// Exibe a tela de cadastro
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Erro ao carregar a tela de cadastro de cronograma.");
+	// Edita o cronograma selecionado
+	@FXML
+	private void editarCronograma() {
+		String cronogramaSelecionado = listaCronograma.getSelectionModel().getSelectedItem();
+		if (cronogramaSelecionado != null) {
+			mainApp.carregarTela("/gui/CronogramaView.fxml", "Editar Cronograma");
+			// Você pode passar o cronograma selecionado para a tela de edição.
+		} else {
+			alerta("Selecione um cronograma", "Por favor, selecione um cronograma para editar.");
 		}
 	}
 
-	// Método auxiliar para atualizar a lista de cronogramas
-	private void atualizarListaCronograma() {
-		// Limpa a lista atual
-		listaCronograma.getItems().clear();
-
-		// Adiciona itens de exemplo à lista (substitua por dados reais)
-		listaCronograma.getItems().addAll("Cronograma 1: Matemática - 10 horas", "Cronograma 2: Física - 8 horas",
-				"Cronograma 3: Química - 6 horas");
-
-		System.out.println("Lista de cronogramas atualizada.");
+	// Deleta o cronograma selecionado
+	@FXML
+	private void deletarCronograma() {
+		String cronogramaSelecionado = listaCronograma.getSelectionModel().getSelectedItem();
+		if (cronogramaSelecionado != null) {
+			cronogramas.remove(cronogramaSelecionado);
+		} else {
+			alerta("Selecione um cronograma", "Por favor, selecione um cronograma para deletar.");
+		}
 	}
 
+	// Exibe um alerta
+	private void alerta(String titulo, String mensagem) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(titulo);
+		alert.setHeaderText(null);
+		alert.setContentText(mensagem);
+		alert.showAndWait();
+	}
 }

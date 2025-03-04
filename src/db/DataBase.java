@@ -58,7 +58,6 @@ public class DataBase {
     	    + "horario TEXT NOT NULL, "
     	    + "materia TEXT NOT NULL, "
     	    + "assunto TEXT NOT NULL, "
-    	    + "concluido BOOLEAN NOT NULL CHECK (concluido IN (0, 1)), "  // Restrição para valores booleanos
     	    + "usuario_id INTEGER NOT NULL, "
     	    + "FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE);";  // Adição de CASCADE
 

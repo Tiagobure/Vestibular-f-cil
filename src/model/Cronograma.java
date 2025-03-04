@@ -6,7 +6,6 @@ public class Cronograma {
 	private String horario;
 	private String materia;
 	private String assunto;
-	private boolean concluido;
 	private int usuarioId;
 
 	public Cronograma(String diaSemana, String horario, String materia, String assunto, int usuarioId) {
@@ -64,13 +63,6 @@ public class Cronograma {
 		this.assunto = assunto;
 	}
 
-	public boolean isConcluido() {
-		return concluido;
-	}
-
-	public void setConcluido(boolean concluido) {
-		this.concluido = concluido;
-	}
 
 	public int getUsuarioId() {
 		return usuarioId;

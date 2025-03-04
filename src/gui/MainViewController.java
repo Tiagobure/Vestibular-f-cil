@@ -19,10 +19,11 @@ import javafx.scene.layout.VBox;
 public class MainViewController {
 
 	private Main mainApp;
-	
+
 	public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
-    }
+		this.mainApp = mainApp;
+	}
+
 	@FXML
 	private LineChart<String, Number> graficoHoras;
 
@@ -42,38 +43,26 @@ public class MainViewController {
 
 	@FXML
 	public void initialize() {
-		// Inicializa o mês atual
-		mesAtual = YearMonth.now();
-
-		// Configura o ComboBox de visualização
+		mesAtual = YearMonth.now(); // Inicializa o mês atual
 		comboVisualizacao.getItems().addAll("Gráfico de Horas", "Calendário");
-		comboVisualizacao.getSelectionModel().selectFirst();
-
-		// Inicializa o gráfico de horas
+		comboVisualizacao.getSelectionModel().selectFirst(); // Seleciona a primeira opção
 		carregarDadosGrafico();
-
-		// Configura o listener para mudar a visualização
 		comboVisualizacao.setOnAction(event -> mudarVisualizacao());
-
-		// Atualiza o calendário com o mês atual
-		atualizarCalendario();
+		atualizarCalendario(); // Atualiza o calendário com o mês atual
 	}
 
-	// Alterna entre gráfico e calendário
 	@FXML
 	private void mudarVisualizacao() {
 		String selecao = comboVisualizacao.getSelectionModel().getSelectedItem();
-		System.out.println("Opção selecionada: " + selecao);
 		if (selecao.equals("Gráfico de Horas")) {
 			graficoHoras.setVisible(true);
 			containerCalendario.setVisible(false);
-		} else if (selecao.equals("Calendário")) {
+		} else {
 			graficoHoras.setVisible(false);
 			containerCalendario.setVisible(true);
 		}
 	}
 
-	// Carrega dados fictícios no gráfico (substitua com dados reais)
 	private void carregarDadosGrafico() {
 		XYChart.Series<String, Number> series = new XYChart.Series<>();
 		series.setName("Horas Estudadas");
@@ -85,30 +74,24 @@ public class MainViewController {
 		graficoHoras.getData().add(series);
 	}
 
-	// Atualiza o calendário com os dias do mês
 	private void atualizarCalendario() {
 		diasDoMes.getChildren().clear(); // Limpa os dias anteriores
 		labelMesAtual.setText(mesAtual.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
 
 		LocalDate primeiroDia = mesAtual.atDay(1);
 		int diasNoMes = mesAtual.lengthOfMonth();
-		int diaSemana = primeiroDia.getDayOfWeek().getValue() % 7; // Ajuste para Domingo=0
+		int diaSemana = (primeiroDia.getDayOfWeek().getValue() == 7) ? 0 : primeiroDia.getDayOfWeek().getValue();
 
 		HBox semanaAtual = new HBox(5);
 		semanaAtual.setAlignment(Pos.CENTER);
 
-		// Preenche os dias vazios no início do mês
 		for (int i = 0; i < diaSemana; i++) {
 			semanaAtual.getChildren().add(new Label(""));
 		}
 
-		// Preenche os dias do mês
 		for (int dia = 1; dia <= diasNoMes; dia++) {
-			Button botaoDia = new Button(String.valueOf(dia));
-			botaoDia.setOnAction(this::selecionarDia);
-			semanaAtual.getChildren().add(botaoDia);
+			adicionarBotaoDia(semanaAtual, dia);
 
-			// Inicia uma nova semana após o sábado
 			if ((diaSemana + dia) % 7 == 0) {
 				diasDoMes.getChildren().add(semanaAtual);
 				semanaAtual = new HBox(5);
@@ -116,13 +99,17 @@ public class MainViewController {
 			}
 		}
 
-		// Adiciona a última semana (se necessário)
 		if (!semanaAtual.getChildren().isEmpty()) {
 			diasDoMes.getChildren().add(semanaAtual);
 		}
 	}
 
-	// Navegação do calendário
+	private void adicionarBotaoDia(HBox semanaAtual, int dia) {
+		Button botaoDia = new Button(String.valueOf(dia));
+		botaoDia.setOnAction(this::selecionarDia);
+		semanaAtual.getChildren().add(botaoDia);
+	}
+
 	@FXML
 	private void mesAnterior() {
 		mesAtual = mesAtual.minusMonths(1);
@@ -135,7 +122,6 @@ public class MainViewController {
 		atualizarCalendario();
 	}
 
-	// Métodos de navegação para outras telas
 	@FXML
 	private void abrirSimulados() {
 		mainApp.carregarTela("/gui/SelecaoSimuladoView.fxml", "Simulados");
@@ -153,24 +139,21 @@ public class MainViewController {
 
 	@FXML
 	private void abrirCronograma() {
-		mainApp.carregarTela("/gui/MostrarConogramaView.fxml", "Cronograma");
+		mainApp.carregarTela("/gui/MostrarCronogramaView.fxml", "Cronograma");
 	}
+
 	@FXML
 	private void abrirBusca() {
 		mainApp.carregarTela("/gui/BuscaView.fxml", "Busca");
-
 	}
-
-	// Método genérico para carregar telas
 
 	@FXML
 	private void selecionarDia(ActionEvent event) {
-		// Obtém o botão que foi clicado
-		Button botaoClicado = (Button) event.getSource();
-		// Obtém o texto do botão (número do dia)
-		String diaSelecionado = botaoClicado.getText();
-
-		// Exibe o dia selecionado no console (ou faz outra ação)
-		System.out.println("Dia selecionado: " + diaSelecionado);
+		Object source = event.getSource();
+		if (source instanceof Button) {
+			Button botaoClicado = (Button) source;
+			String diaSelecionado = botaoClicado.getText();
+			System.out.println("Dia selecionado: " + diaSelecionado);
+		}
 	}
 }
