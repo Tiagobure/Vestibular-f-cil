@@ -3,6 +3,8 @@ package gui;
 import java.io.IOException;
 import java.util.List;
 
+import application.Main;
+import application.MainAppAware;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +14,7 @@ import model.Questao;
 import model.Simulado;
 import model.dao.QuestaoDAO;
 
-public class SelecaoSimuladoViewController {
+public class SelecaoSimuladoViewController implements MainAppAware {
 	private Stage stage;
 
 	// Método para definir o Stage (janela) atual
@@ -32,6 +34,11 @@ public class SelecaoSimuladoViewController {
 		QuestaoDAO questaoDAO = new QuestaoDAO();
 		List<Questao> questoesENEM = questaoDAO.listarPorExame("ENEM");
 		iniciarSimulado("ENEM", questoesENEM);
+	}
+	
+	@FXML
+	private void voltarMenu(){
+		
 	}
 
 	private void iniciarSimulado(String exame, List<Questao> questoes) {
@@ -67,5 +74,11 @@ public class SelecaoSimuladoViewController {
 			e.printStackTrace();
 			System.out.println("Erro ao carregar a tela de questões.");
 		}
+	}
+
+	@Override
+	public void setMainApp(Main mainApp) {
+		// TODO Auto-generated method stub
+		
 	}
 }
