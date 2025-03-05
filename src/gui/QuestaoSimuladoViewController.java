@@ -1,7 +1,11 @@
 package gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import application.Main;
+import application.MainAppAware;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -10,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -23,43 +28,82 @@ import model.Questao;
 import model.Simulado;
 import model.dao.SimuladoDAO;
 
-public class QuestaoSimuladoViewController {
+public class QuestaoSimuladoViewController implements MainAppAware {
 
-	// Outros campos...
-	private int usuarioId; // ID do usuário
+	// Campos da interface
+	@FXML
+	private Button btConfirma;
 
-	// Método para definir o usuarioId
-	public void setUsuarioId(int usuarioId) {
-		this.usuarioId = usuarioId;
-	}
+	@FXML
+	private Button btProxima;
+
+	@FXML
+	private Button btSair;
 
 	@FXML
 	private Label labelTempo; // Exibe o tempo restante
+
 	@FXML
 	private VBox containerAlternativas; // Contém as alternativas (A, B, C, D, E)
+
 	@FXML
 	private Label labelMensagem; // Exibe mensagens de feedback ao usuário
 
+	@FXML
+	private ImageView imagemQuestao;
+
+	// Dependências
+	private Main mainApp; // Referência para a aplicação principal
+	private List<Questao> questoes;
 	private Simulado simulado; // Objeto Simulado atual
 	private Timeline timeline; // Cronômetro do simulado
 	private ToggleGroup grupoAlternativas = new ToggleGroup(); // Grupo de alternativas
-
 	private SimuladoDAO simuladoDAO; // DAO para salvar resultados
+	private int usuarioId; // ID do usuário
+
+	// Método para definir o MainApp (injeção de dependência)
+	@Override
+	public void setMainApp(Main mainApp) {
+		if (mainApp == null) {
+			throw new IllegalArgumentException("MainApp não pode ser nulo.");
+		}
+		this.mainApp = mainApp;
+	}
+
+	// Método para definir o usuarioId
+	public void setUsuarioId(int usuarioId) {
+		if (usuarioId <= 0) {
+			throw new IllegalArgumentException("ID do usuário inválido.");
+		}
+		this.usuarioId = usuarioId;
+	}
+
+	// Método para definir o SimuladoDAO (injeção de dependência)
+	public void setSimuladoDAO(SimuladoDAO simuladoDAO) {
+		if (simuladoDAO == null) {
+			throw new IllegalArgumentException("SimuladoDAO não pode ser nulo.");
+		}
+		this.simuladoDAO = simuladoDAO;
+	}
 
 	// Define o simulado atual e inicializa a interface
-	public void setSimulado(Simulado simulado) {
-		this.simulado = simulado;
-		if (simulado != null) {
-			carregarQuestaoAtual(); // Carrega a primeira questão
-			iniciarCronometro(); // Inicia o cronômetro
-		} else {
-			exibirMensagem("Erro: Simulado não foi inicializado.");
+	public void setSimulado(Simulado simulado, List<Questao> questoes) {
+		if (simulado == null) {
+			throw new IllegalArgumentException("Simulado não pode ser nulo.");
 		}
+		this.simulado = simulado;
+		this.questoes = questoes;
+		iniciarCronometro(); // Inicia o cronômetro
+		carregarQuestaoAtual(); // Carrega a primeira questão
 	}
 
 	// Inicializa a interface
 	@FXML
 	public void initialize() {
+		if (simulado == null) {
+			this.simulado = new Simulado(); // Criando um simulado vazio por padrão
+			this.questoes = new ArrayList<>(); // Evita NullPointerException
+		}
 		containerAlternativas.getChildren().clear(); // Limpa as alternativas
 		labelMensagem.setText(""); // Inicializa a mensagem como vazia
 	}
@@ -96,6 +140,9 @@ public class QuestaoSimuladoViewController {
 		}
 	}
 
+	// Constante para o caminho da imagem padrão
+	private static final String IMAGEM_PADRAO_PATH = "/gui/padrao.png";
+
 	// Carrega a questão atual
 	private void carregarQuestaoAtual() {
 		if (simulado == null) {
@@ -119,31 +166,60 @@ public class QuestaoSimuladoViewController {
 		// Exibe cada imagem
 		for (String imagem : imagens) {
 			try {
-				// Remove espaços em branco e carrega a imagem
-				Image img = new Image(imagem.trim());
-				if (img.isError()) {
-					throw new Exception("Erro ao carregar a imagem: " + imagem);
+				// Remove espaços em branco e verifica se o caminho não está vazio
+				String caminhoImagem = imagem.trim();
+				if (caminhoImagem.isEmpty()) {
+					throw new Exception("Caminho da imagem está vazio.");
 				}
 
-				// Cria um ImageView para exibir a imagem
-				ImageView imageView = new ImageView(img);
-				imageView.setFitWidth(600); // Ajuste o tamanho conforme necessário
-				imageView.setPreserveRatio(true);
+				// Carrega a imagem
+				Image img = carregarImagem(caminhoImagem);
 
-				// Adiciona a imagem ao container
+				// Exibe a imagem no container
+				ImageView imageView = criarImageView(img, 600, true);
 				containerAlternativas.getChildren().add(imageView);
 			} catch (Exception e) {
 				exibirMensagem("Erro ao carregar a imagem: " + imagem);
-
-				// Exibe uma imagem padrão em caso de erro
-				ImageView imageView = new ImageView(new Image("caminho/para/imagem_padrao.jpg"));
-				imageView.setFitWidth(600);
-				imageView.setPreserveRatio(true);
-				containerAlternativas.getChildren().add(imageView);
+				exibirImagemPadrao();
 			}
 		}
 
 		// Adiciona as alternativas (A, B, C, D, E)
+		adicionarAlternativas();
+	}
+
+	// Método para carregar uma imagem (URL ou recurso do classpath)
+	private Image carregarImagem(String caminhoImagem) throws Exception {
+		if (caminhoImagem.startsWith("http://") || caminhoImagem.startsWith("https://")) {
+			// Carrega a imagem de uma URL
+			return new Image(caminhoImagem);
+		} else {
+			// Carrega a imagem do classpath (recurso interno)
+			return new Image(getClass().getResourceAsStream(caminhoImagem));
+		}
+	}
+
+	// Método para criar um ImageView com configurações padrão
+	private ImageView criarImageView(Image imagem, double largura, boolean preservarProporcao) {
+		ImageView imageView = new ImageView(imagem);
+		imageView.setFitWidth(largura);
+		imageView.setPreserveRatio(preservarProporcao);
+		return imageView;
+	}
+
+	// Método para exibir a imagem padrão em caso de erro
+	private void exibirImagemPadrao() {
+		try {
+			Image imagemPadrao = carregarImagem(IMAGEM_PADRAO_PATH);
+			ImageView imageView = criarImageView(imagemPadrao, 600, true);
+			containerAlternativas.getChildren().add(imageView);
+		} catch (Exception e) {
+			exibirMensagem("Erro ao carregar a imagem padrão.");
+		}
+	}
+
+	// Método para adicionar as alternativas (A, B, C, D, E)
+	private void adicionarAlternativas() {
 		String[] alternativas = { "A", "B", "C", "D", "E" };
 		for (String alternativa : alternativas) {
 			RadioButton radio = new RadioButton(alternativa);
@@ -203,18 +279,18 @@ public class QuestaoSimuladoViewController {
 
 			// Passa os resultados para o controlador da tela de resultados
 			ResultadoViewController resultadoController = loader.getController();
-			resultadoController.setResultados(simulado, usuarioId, simuladoDAO); // Passa o simulado, usuarioId e
-																					// simuladoDAO
+			resultadoController.setSimulado(simulado); // Passa o simulado
+			resultadoController.setUsuarioId(usuarioId); // Passa o ID do usuário
+			resultadoController.setSimuladoDAO(simuladoDAO); // Passa o DAO
 
 			// Configura a cena e exibe a tela
-			Scene scene = new Scene(root);
-			Stage resultadoStage = new Stage();
-			resultadoStage.setScene(scene);
-			resultadoStage.setTitle("Resultados do Simulado");
-			resultadoStage.show();
+			Stage stage = new Stage();
+			stage.setScene(new Scene(root));
+			stage.setTitle("Resultados do Simulado");
+			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Erro ao carregar a tela de resultados.");
+			exibirMensagem("Erro ao carregar a tela de resultados.");
 		}
 	}
 
@@ -262,7 +338,7 @@ public class QuestaoSimuladoViewController {
 	private void voltarParaSelecaoSimulado() {
 		try {
 			// Carrega a tela de seleção de simulado
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SelecaoSimuladoView.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelecaoSimuladoView.fxml"));
 			Parent root = loader.load();
 
 			// Obtém o Stage atual
@@ -275,17 +351,13 @@ public class QuestaoSimuladoViewController {
 			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Erro ao carregar a tela de seleção de simulado.");
+			exibirMensagem("Erro ao carregar a tela de seleção de simulado.");
 		}
 	}
 
 	// Exibe uma mensagem de feedback ao usuário
 	private void exibirMensagem(String mensagem) {
 		labelMensagem.setText(mensagem);
-	}
-
-	// Define o SimuladoDAO (injeção de dependência)
-	public void setSimuladoDAO(SimuladoDAO simuladoDAO) {
-		this.simuladoDAO = simuladoDAO;
+		labelMensagem.setStyle("-fx-text-fill: red; -fx-font-size: 14px;"); // Estilo para mensagens de erro
 	}
 }

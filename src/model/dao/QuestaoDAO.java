@@ -33,7 +33,8 @@ public class QuestaoDAO {
                 questoes.add(q);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	 System.err.println("Erro ao listar questões por exame: " + e.getMessage());
+             e.printStackTrace();
         }
 
         return questoes;
@@ -51,7 +52,8 @@ public class QuestaoDAO {
             pstmt.setString(5, String.valueOf(questao.getRespostaCorreta())); // Converte char para String
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+        	  System.err.println("Erro ao inserir questão: " + e.getMessage());
+              e.printStackTrace();;
         }
     }
 
@@ -80,7 +82,8 @@ public class QuestaoDAO {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+        	 System.err.println("Erro ao deletar questão: " + e.getMessage());
+             e.printStackTrace();
         }
     }
 
@@ -104,7 +107,8 @@ public class QuestaoDAO {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	 System.err.println("Erro ao buscar questão por ID: " + e.getMessage());
+             e.printStackTrace();
         }
 
         return questao;

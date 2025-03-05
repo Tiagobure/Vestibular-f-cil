@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Simulado {
@@ -20,6 +21,9 @@ public class Simulado {
 		this.acertos = 0;
 		this.erros = 0;
 	}
+	  public Simulado() {
+	        this.questoes = new ArrayList<>();
+	    }
 
 	// Getters e Setters
 	public String getVestibularSelecionado() {

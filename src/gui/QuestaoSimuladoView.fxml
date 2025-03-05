@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
@@ -10,21 +11,27 @@
     <!-- Label do Tempo -->
     <Label fx:id="labelTempo" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" />
 
+    <!-- Label para exibir mensagens de feedback -->
+    <Label fx:id="labelMensagem" style="-fx-font-size: 14px; -fx-text-fill: red;" />
+
     <!-- ImageView da Questão -->
-    <ImageView fx:id="imagemQuestao" fitHeight="400" fitWidth="600" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 1;" />
+    <ImageView fx:id="imagemQuestao" fitHeight="300.0" fitWidth="500.0" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 1)">
+      <VBox.margin>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      </VBox.margin></ImageView>
 
     <!-- Container das Alternativas -->
-    <VBox fx:id="containerAlternativas" spacing="12" style="-fx-padding: 10px; -fx-background-color: #ffffff; -fx-border-radius: 10px;                   -fx-border-color: #ddd; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 1;">
+    <VBox fx:id="containerAlternativas" spacing="12" style="-fx-padding: 10px; -fx-background-color: #ffffff; -fx-border-radius: 10px; -fx-border-color: #ddd; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 1)">
         <!-- As alternativas serão adicionadas dinamicamente aqui -->
     </VBox>
 
     <!-- Botões -->
     <VBox alignment="CENTER" spacing="10">
-        <Button onAction="#confirmarResposta" style="-fx-background-color: #4CAF50; -fx-text-fill: white;                         -fx-font-size: 16px; -fx-pref-width: 220px;                         -fx-padding: 12px; -fx-border-radius: 10px;                         -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Confirmar Resposta" />
+        <Button fx:id="btConfirma" onAction="#confirmarResposta" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 220px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Confirmar Resposta" />
 
-        <Button onAction="#proximaQuestao" style="-fx-background-color: #ff5252; -fx-text-fill: white;                         -fx-font-size: 16px; -fx-pref-width: 220px;                         -fx-padding: 12px; -fx-border-radius: 10px;                         -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Próxima" />
+        <Button fx:id="btProxima" onAction="#proximaQuestao" style="-fx-background-color: #ff5252; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 220px; -fx-padding: 12px; -fx-border-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Próxima" />
 
-        <Button onAction="#sairSimulado" style="-fx-background-color: #616161; -fx-text-fill: white;                         -fx-font-size: 14px; -fx-pref-width: 180px;                         -fx-padding: 10px; -fx-border-radius: 10px;                         -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Sair do Simulado" />
+        <Button fx:id="btSair" onAction="#sairSimulado" style="-fx-background-color: #616161; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 180px; -fx-padding: 10px; -fx-border-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);" text="Sair do Simulado" />
     </VBox>
 
 </VBox>

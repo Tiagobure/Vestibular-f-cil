@@ -1,20 +1,24 @@
 package application;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import db.DataBase;
 import gui.CronogramaViewController;
 import gui.LoginViewController;
+import gui.QuestaoSimuladoViewController;
+import gui.util.Alerts;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Cronograma;
+import model.Questao;
+import model.Simulado;
 
 public class Main extends Application {
 
@@ -48,11 +52,8 @@ public class Main extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 			// Exibe uma mensagem de erro para o usuário
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Erro");
-			alert.setHeaderText("Erro ao carregar a tela de login");
-			alert.setContentText("O arquivo FXML da tela de login não pôde ser carregado.");
-			alert.showAndWait();
+			Alerts.showAlert("Erro", "Erro ao carregar a tela de login",
+					"O arquivo FXML da tela de login não pôde ser carregado.", AlertType.ERROR);
 		}
 	}
 
@@ -60,38 +61,49 @@ public class Main extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
 			Parent root = loader.load();
-
-			// Obtém o controlador da tela carregada
 			Object controller = loader.getController();
 
-			// Passa a referência do Main para todos os controladores que implementam
-			// MainAppAware
 			if (controller instanceof MainAppAware) {
 				((MainAppAware) controller).setMainApp(this);
 			}
 
-			// Passa parâmetros específicos para o CronogramaViewController
 			if (controller instanceof CronogramaViewController && params != null) {
 				CronogramaViewController cronogramaController = (CronogramaViewController) controller;
 
-				// Verifica se a chave "cronograma" existe no mapa
 				if (params.containsKey("cronograma")) {
 					cronogramaController.setCronogramaSelecionado((Cronograma) params.get("cronograma"));
 				}
 
-				// Verifica se a chave "usuarioId" existe no mapa
 				if (params.containsKey("usuarioId")) {
 					cronogramaController.setUsuarioId((int) params.get("usuarioId"));
 				}
 			}
 
-			// Configura a cena e a janela
+			if (controller instanceof QuestaoSimuladoViewController && params != null) {
+				QuestaoSimuladoViewController simuladoController = (QuestaoSimuladoViewController) controller;
+
+				if (params.containsKey("simulado") && params.containsKey("questoes")) {
+					Simulado simulado = (Simulado) params.get("simulado");
+
+					// Verifique se o objeto em "questoes" é uma List<Questao>
+					Object questoesObj = params.get("questoes");
+					if (questoesObj instanceof List<?>) {
+						List<Questao> questoes = (List<Questao>) questoesObj; // Cast seguro
+						simuladoController.setSimulado(simulado, questoes);
+					} else {
+						throw new IllegalArgumentException("O parâmetro 'questoes' não é uma List<Questao>.");
+					}
+				}
+			}
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle(titulo);
 			stage.show();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			Alerts.showAlert("Erro ao carregar a tela", null, "Não foi possível carregar a tela: " + fxml,
+					AlertType.INFORMATION);
+
 		}
 	}
 
@@ -101,7 +113,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		DataBase.init();
-
+//
 //		String csvFile = "data/questoes.csv";
 //		try {
 //			DataBase.importarCSV(csvFile);

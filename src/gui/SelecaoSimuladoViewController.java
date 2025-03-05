@@ -10,6 +10,7 @@ import db.DbException;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -18,14 +19,24 @@ import model.Simulado;
 import model.dao.QuestaoDAO;
 
 public class SelecaoSimuladoViewController implements MainAppAware {
-	private Main mainApp; // A variável mainApp será usada para carregar outras telas
-	private QuestaoDAO questaoDAO; // A dependência do DAO
 
+	private Main mainApp; // A variável mainApp será usada para carregar outras telas
+	private QuestaoDAO questaoDAO = new QuestaoDAO(); // A dependência do DAO
 	@FXML
+	private Button btEnem;
+	@FXML
+	private Button btFuvest;
+	@FXML
+	private Button btVoltar;
+
 	private Label labelTempo;
 
 	// Método para definir o QuestaoDAO (injeção de dependência)
 	public void setQuestaoDAO(QuestaoDAO questaoDAO) {
+		System.out.println("QuestaoDAO está sendo definido: " + questaoDAO);
+		if (questaoDAO == null) {
+			throw new IllegalArgumentException("QuestaoDAO não pode ser nulo.");
+		}
 		this.questaoDAO = questaoDAO;
 	}
 
@@ -54,13 +65,13 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 			return;
 		}
 		List<Questao> questoesENEM = questaoDAO.listarPorExame("ENEM");
-	    
-	    if (questoesENEM.isEmpty()) {
-	        exibirErro("Nenhuma questão encontrada", "Não há questões disponíveis para o exame ENEM.");
-	        return;
-	    }
-	    
-	    iniciarSimulado("ENEM", questoesENEM);
+
+		if (questoesENEM.isEmpty()) {
+			exibirErro("Nenhuma questão encontrada", "Não há questões disponíveis para o exame ENEM.");
+			return;
+		}
+
+		iniciarSimulado("ENEM", questoesENEM);
 	}
 
 	@FXML
@@ -96,23 +107,19 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 		}
 
 		// Cria o objeto Simulado
-		Simulado simulado = new Simulado(exame, questoes, 180); // 180 minutos = 3 horas
+		Simulado simulado = new Simulado(exame, questoes, 180); // 180 minutos = 2 horas
+
+		// Prepara os parâmetros para a próxima tela
 		Map<String, Object> params = new HashMap<>();
 		params.put("simulado", simulado);
+		params.put("questoes", questoes); // Passa a lista de questões, não o QuestaoDAO
 
 		// Abre a tela de questões do simulado
 		try {
-			// Usando o mainApp para carregar a tela de questões
-			mainApp.carregarTela("/view/QuestaoSimuladoView.fxml", "Questões do Simulado", params);
-
-			// Fecha a tela de seleção de vestibular (opcional)
-			Stage stage = (Stage) labelTempo.getScene().getWindow();
-			if (stage != null) {
-				stage.close();
-			}
+			mainApp.carregarTela("/gui/QuestaoSimuladoView.fxml", "simulado", params);
 		} catch (DbException e) {
 			e.printStackTrace();
-			System.out.println("Erro ao carregar a tela de questões.");
+			exibirErro("Erro ao carregar a tela de questões", e.getMessage());
 		}
 	}
 

@@ -80,41 +80,42 @@ public class DataBase {
 	}
 
 	// Método para importar dados do CSV para a tabela 'questoes'
-//    public static void importarCSV(String csvFile) {
-//        String insertSQL = "INSERT INTO questoes (exame, materia, assunto, imagem_questao, resposta_correta) "
-//                          + "VALUES (?, ?, ?, ?, ?)";
+
+//	public static void importarCSV(String csvFile) {
+//		String insertSQL = "INSERT INTO questoes (exame, materia, assunto, imagem_questao, resposta_correta) "
+//				+ "VALUES (?, ?, ?, ?, ?)";
 //
-//        try (Connection conn = getConnection();
-//             BufferedReader br = new BufferedReader(new FileReader(csvFile));
-//             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
-//            
-//            String linha;
-//            boolean primeiraLinha = true;
-//            
-//            while ((linha = br.readLine()) != null) {
-//                // Ignora o cabeçalho
-//                if (primeiraLinha) {
-//                    primeiraLinha = false;
-//                    continue;
-//                }
-//                
-//                String[] valores = linha.split(","); // Assume que os valores são separados por vírgula
-//                if (valores.length < 5) {
-//                    System.out.println("Linha inválida: " + linha);
-//                    continue;
-//                }
+//		try (Connection conn = getConnection();
+//				BufferedReader br = new BufferedReader(new FileReader(csvFile));
+//			PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
 //
-//                pstmt.setString(1, valores[0].trim()); // exame
-//                pstmt.setString(2, valores[1].trim()); // materia
-//                pstmt.setString(3, valores[2].trim()); // assunto
-//                pstmt.setString(4, valores[3].trim()); // imagem_questao
-//                pstmt.setString(5, valores[4].trim()); // resposta_correta
+//			String linha;
+//			boolean primeiraLinha = true;
+//			
+//			while ((linha = br.readLine()) != null) {
+//				// Ignora o cabeçalho
+//				if (primeiraLinha) {
+//				primeiraLinha = false;
+//					continue;
+//				}
 //
-//                pstmt.executeUpdate();
-//            }
-//            System.out.println("Dados importados com sucesso!");
-//        } catch (SQLException | IOException e) {
-//            System.err.println("Erro ao importar CSV: " + e.getMessage());
-//        }
-//    }
+//				String[] valores = linha.split(","); // Assume que os valores são separados por vírgula
+//				if (valores.length < 5) {
+//					System.out.println("Linha inválida: " + linha);
+//				continue;
+//				}
+//
+//				pstmt.setString(1, valores[0].trim()); // exame
+//				pstmt.setString(2, valores[1].trim()); // materia
+//				pstmt.setString(3, valores[2].trim()); // assunto
+//				pstmt.setString(4, valores[3].trim()); // imagem_questao
+//				pstmt.setString(5, valores[4].trim()); // resposta_correta
+//
+//				pstmt.executeUpdate();
+//			}
+//				System.out.println("Dados importados com sucesso!");
+//		} catch (SQLException | IOException e) {
+//			System.err.println("Erro ao importar CSV: " + e.getMessage());
+//		}
+//	}
 }
