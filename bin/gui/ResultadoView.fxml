@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ResultadoViewController" 
+      alignment="CENTER" spacing="15" style="-fx-background-color: #2E3440; -fx-padding: 30;">
+    
+    <!-- Título -->
+    <Label text="Resultados do Simulado" style="-fx-text-fill: #ECEFF4; -fx-font-size: 26px; -fx-font-weight: bold;" />
+
+    <!-- Acertos -->
+    <Label fx:id="labelAcertos" style="-fx-text-fill: #A3BE8C; -fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <!-- Erros -->
+    <Label fx:id="labelErros" style="-fx-text-fill: #BF616A; -fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <!-- Mensagem Personalizada -->
+    <Label fx:id="labelMensagem" wrapText="true" maxWidth="400" alignment="CENTER" 
+           style="-fx-text-fill: #ECEFF4; -fx-font-size: 18px; -fx-padding: 10;" />
+    
+    <!-- Botão para voltar ao menu -->
+    <Button text="Voltar ao Menu" fx:id="botaoVoltar" onAction="#voltarParaSelecaoSimulado"
+            style="-fx-background-color: #5E81AC; -fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10 20; 
+                   -fx-background-radius: 5;" />
+</VBox>

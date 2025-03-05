@@ -10,6 +10,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Cronograma;
@@ -29,8 +31,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		// inicializarBancoDeDados();
-
 		try {
 			// Carrega o arquivo FXML da View Principal
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LoginView.fxml"));
@@ -47,6 +47,12 @@ public class Main extends Application {
 			primaryStage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
+			// Exibe uma mensagem de erro para o usuário
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Erro");
+			alert.setHeaderText("Erro ao carregar a tela de login");
+			alert.setContentText("O arquivo FXML da tela de login não pôde ser carregado.");
+			alert.showAndWait();
 		}
 	}
 
@@ -94,9 +100,16 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-
 		DataBase.init();
-		launch(args);
 
+//		String csvFile = "data/questoes.csv";
+//		try {
+//			DataBase.importarCSV(csvFile);
+//		} catch (Exception e) {
+//			System.err.println("Erro ao importar CSV: " + e.getMessage());
+//			// Você pode decidir se quer continuar a aplicação ou encerrá-la aqui
+//		}
+
+		launch(args);
 	}
 }

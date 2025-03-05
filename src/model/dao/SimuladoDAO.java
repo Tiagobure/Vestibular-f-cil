@@ -15,18 +15,18 @@ public class SimuladoDAO {
 
 	// Salva os resultados do simulado no banco de dados
 	public void salvarResultado(Simulado simulado, int usuarioId) {
-		String sql = "INSERT INTO resultados_simulado (usuario_id, vestibular, acertos, erros, tempo_restante) VALUES (?, ?, ?, ?, ?)";
+	    String sql = "INSERT INTO resultados_simulado (usuario_id, vestibular, acertos, erros, tempo_restante) VALUES (?, ?, ?, ?, ?)";
 
-		try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, usuarioId);
-			pstmt.setString(2, simulado.getVestibularSelecionado());
-			pstmt.setInt(3, simulado.getAcertos());
-			pstmt.setInt(4, simulado.getErros());
-			pstmt.setInt(5, simulado.getTempoRestante());
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    try (Connection conn = DataBase.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, usuarioId);
+	        pstmt.setString(2, simulado.getVestibularSelecionado());
+	        pstmt.setInt(3, simulado.getAcertos());
+	        pstmt.setInt(4, simulado.getErros());
+	        pstmt.setInt(5, simulado.getTempoRestante());
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	// Recupera o histórico de simulados de um usuário

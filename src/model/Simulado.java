@@ -4,13 +4,13 @@ import java.util.List;
 
 public class Simulado {
 	private String vestibularSelecionado; // Ex: "FUVEST", "ENEM"
-	private List<Questao> questoes;
-	private int questaoAtualIndex;
-	private int tempoRestante; // Em segundos
-	private int acertos;
-	private int erros;
-	private int usuarioId;
-	
+	private List<Questao> questoes; // Lista de questões do simulado
+	private int questaoAtualIndex; // Índice da questão atual
+	private int tempoRestante; // Tempo restante em segundos
+	private int acertos; // Número de acertos
+	private int erros; // Número de erros
+	private int usuarioId; // ID do usuário realizando o simulado
+
 	// Construtor
 	public Simulado(String vestibularSelecionado, List<Questao> questoes, int tempoTotal) {
 		this.vestibularSelecionado = vestibularSelecionado;
@@ -19,7 +19,6 @@ public class Simulado {
 		this.questaoAtualIndex = 0;
 		this.acertos = 0;
 		this.erros = 0;
-
 	}
 
 	// Getters e Setters
@@ -28,7 +27,10 @@ public class Simulado {
 	}
 
 	public Questao getQuestaoAtual() {
-		return questoes.get(questaoAtualIndex);
+		if (questaoAtualIndex >= 0 && questaoAtualIndex < questoes.size()) {
+			return questoes.get(questaoAtualIndex);
+		}
+		return null; // Retorna null se não houver questões
 	}
 
 	public int getTempoRestante() {
@@ -41,6 +43,14 @@ public class Simulado {
 
 	public int getErros() {
 		return erros;
+	}
+
+	public int getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(int usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 
 	// Métodos
@@ -56,41 +66,35 @@ public class Simulado {
 		}
 	}
 
-	public void registrarResposta(String respostaUsuario) {
+	// Registra a resposta do usuário
+	public void registrarResposta(char respostaUsuario) {
 		Questao questao = getQuestaoAtual();
-		if (questao.getResposta().equalsIgnoreCase(respostaUsuario)) {
+		if (questao != null && questao.getRespostaCorreta() == respostaUsuario) {
 			acertos++;
 		} else {
 			erros++;
 		}
 	}
 
+	// Atualiza o tempo restante
 	public void atualizarTempo() {
 		if (tempoRestante > 0) {
 			tempoRestante--;
 		}
 	}
 
+	// Verifica se o simulado foi finalizado
 	public boolean isFinalizado() {
 		return tempoRestante <= 0 || questaoAtualIndex >= questoes.size();
 	}
-	
+
+	// Define o número de acertos (útil para testes)
 	public void setAcertos(int acertos) {
-        this.acertos = acertos;
-    }
-
-    public void setErros(int erros) {
-        this.erros = erros;
-    }
-
-	public int getUsuarioId() {
-		return usuarioId;
+		this.acertos = acertos;
 	}
 
-	public void setUsuarioId(int usuarioId) {
-		this.usuarioId = usuarioId;
+	// Define o número de erros (útil para testes)
+	public void setErros(int erros) {
+		this.erros = erros;
 	}
-    
-    
-    
 }

@@ -1,69 +1,45 @@
 package model;
 
 public class Questao {
+    private int id;
+    private String exame;
+    private String materia;
+    private String assunto;
+    private String imagemQuestao;
+    private char respostaCorreta;
 
-	private int id;
-	private String pergunta;
-	private String resposta; // Resposta correta
-	private String materia;
-	private String assunto;
-	private String exame; // Ex: "FUVEST", "ENEM"
+    // Construtor
+    public Questao(int id, String exame, String materia, String assunto, String imagemQuestao, char respostaCorreta) {
+        this.id = id;
+        this.exame = exame;
+        this.materia = materia;
+        this.assunto = assunto;
+        this.imagemQuestao = imagemQuestao;
+        this.respostaCorreta = respostaCorreta;
+    }
 
-	// Construtor
-	public Questao(String pergunta, String resposta, String materia, String assunto, String exame) {
-		this.pergunta = pergunta;
-		this.resposta = resposta;
-		this.materia = materia;
-		this.assunto = assunto;
-		this.exame = exame;
-	}
+    // Getters e Setters
+    public int getId() {
+        return id;
+    }
 
-	// Getters e Setters
-	public int getId() {
-		return id;
-	}
+    public String getExame() {
+        return exame;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public String getMateria() {
+        return materia;
+    }
 
-	public String getPergunta() {
-		return pergunta;
-	}
+    public String getAssunto() {
+        return assunto;
+    }
 
-	public void setPergunta(String pergunta) {
-		this.pergunta = pergunta;
-	}
+    public String getImagemQuestao() {
+        return imagemQuestao;
+    }
 
-	public String getResposta() {
-		return resposta;
-	}
-
-	public void setResposta(String resposta) {
-		this.resposta = resposta;
-	}
-
-	public String getMateria() {
-		return materia;
-	}
-
-	public void setMateria(String materia) {
-		this.materia = materia;
-	}
-
-	public String getAssunto() {
-		return assunto;
-	}
-
-	public void setAssunto(String assunto) {
-		this.assunto = assunto;
-	}
-
-	public String getExame() {
-		return exame;
-	}
-
-	public void setExame(String exame) {
-		this.exame = exame;
-	}
+    public char getRespostaCorreta() {
+        return respostaCorreta;
+    }
 }
