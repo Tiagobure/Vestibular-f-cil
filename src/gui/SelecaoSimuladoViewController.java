@@ -91,6 +91,7 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 	}
 
 	private void carregarMainView(Stage stage) {
+		
 		// Usando o mainApp para carregar a tela
 		mainApp.carregarTela("/gui/MainView.fxml", "Menu Principal", null);
 	}
@@ -108,12 +109,13 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 
 		// Cria o objeto Simulado
 		Simulado simulado = new Simulado(exame, questoes, 180); // 180 minutos = 2 horas
-
+		
 		// Prepara os parâmetros para a próxima tela
 		Map<String, Object> params = new HashMap<>();
 		params.put("simulado", simulado);
 		params.put("questoes", questoes); // Passa a lista de questões, não o QuestaoDAO
 
+		
 		// Abre a tela de questões do simulado
 		try {
 			mainApp.carregarTela("/gui/QuestaoSimuladoView.fxml", "simulado", params);

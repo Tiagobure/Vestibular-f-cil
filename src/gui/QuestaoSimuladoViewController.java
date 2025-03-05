@@ -18,10 +18,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Questao;
@@ -31,6 +32,24 @@ import model.dao.SimuladoDAO;
 public class QuestaoSimuladoViewController implements MainAppAware {
 
 	// Campos da interface
+	@FXML
+	private GridPane gride;
+
+	@FXML
+	private RadioButton alternativaA;
+
+	@FXML
+	private RadioButton alternativaB;
+
+	@FXML
+	private RadioButton alternativaC;
+
+	@FXML
+	private RadioButton alternativaD;
+
+	@FXML
+	private RadioButton alternativaE;
+
 	@FXML
 	private Button btConfirma;
 
@@ -44,7 +63,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 	private Label labelTempo; // Exibe o tempo restante
 
 	@FXML
-	private VBox containerAlternativas; // Contém as alternativas (A, B, C, D, E)
+	private ScrollPane containerAlternativas; // Contém as alternativas (A, B, C, D, E)
 
 	@FXML
 	private Label labelMensagem; // Exibe mensagens de feedback ao usuário
@@ -57,6 +76,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 	private List<Questao> questoes;
 	private Simulado simulado; // Objeto Simulado atual
 	private Timeline timeline; // Cronômetro do simulado
+	@FXML
 	private ToggleGroup grupoAlternativas = new ToggleGroup(); // Grupo de alternativas
 	private SimuladoDAO simuladoDAO; // DAO para salvar resultados
 	private int usuarioId; // ID do usuário
@@ -104,8 +124,30 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 			this.simulado = new Simulado(); // Criando um simulado vazio por padrão
 			this.questoes = new ArrayList<>(); // Evita NullPointerException
 		}
-		containerAlternativas.getChildren().clear(); // Limpa as alternativas
+		gride.getChildren().clear(); // Limpa o GridPane
 		labelMensagem.setText(""); // Inicializa a mensagem como vazia
+
+		grupoAlternativas = new ToggleGroup();
+		configurarBotoesAlternativas();
+	}
+
+	private void configurarBotoesAlternativas() {
+		// Adiciona os botões de alternativas ao ToggleGroup
+		alternativaA.setToggleGroup(grupoAlternativas);
+		alternativaB.setToggleGroup(grupoAlternativas);
+		alternativaC.setToggleGroup(grupoAlternativas);
+		alternativaD.setToggleGroup(grupoAlternativas);
+		alternativaE.setToggleGroup(grupoAlternativas);
+
+		// Adiciona listeners para mudar o estilo quando selecionado
+		grupoAlternativas.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+			if (newVal != null) {
+				((RadioButton) newVal).setStyle("-fx-text-fill: yellow; -fx-font-size: 14px;");
+			}
+			if (oldVal != null) {
+				((RadioButton) oldVal).setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+			}
+		});
 	}
 
 	// Inicia o cronômetro do simulado
@@ -157,8 +199,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 		}
 
 		// Limpa as alternativas anteriores
-		containerAlternativas.getChildren().clear();
-		grupoAlternativas.getToggles().clear();
+		gride.getChildren().clear(); // Limpa o GridPane
 
 		// Divide os caminhos das imagens
 		String[] imagens = questao.getImagemQuestao().split(";");
@@ -177,15 +218,12 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 
 				// Exibe a imagem no container
 				ImageView imageView = criarImageView(img, 600, true);
-				containerAlternativas.getChildren().add(imageView);
+				gride.getChildren().add(imageView); // Adiciona ao GridPane
 			} catch (Exception e) {
 				exibirMensagem("Erro ao carregar a imagem: " + imagem);
 				exibirImagemPadrao();
 			}
 		}
-
-		// Adiciona as alternativas (A, B, C, D, E)
-		adicionarAlternativas();
 	}
 
 	// Método para carregar uma imagem (URL ou recurso do classpath)
@@ -211,28 +249,10 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 	private void exibirImagemPadrao() {
 		try {
 			Image imagemPadrao = carregarImagem(IMAGEM_PADRAO_PATH);
-			ImageView imageView = criarImageView(imagemPadrao, 600, true);
-			containerAlternativas.getChildren().add(imageView);
+			ImageView imageView = criarImageView(imagemPadrao, 200, true);
+			gride.getChildren().add(imageView); // Adiciona ao GridPane
 		} catch (Exception e) {
 			exibirMensagem("Erro ao carregar a imagem padrão.");
-		}
-	}
-
-	// Método para adicionar as alternativas (A, B, C, D, E)
-	private void adicionarAlternativas() {
-		String[] alternativas = { "A", "B", "C", "D", "E" };
-		for (String alternativa : alternativas) {
-			RadioButton radio = new RadioButton(alternativa);
-			radio.setToggleGroup(grupoAlternativas);
-			radio.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-			radio.selectedProperty().addListener((obs, oldValue, newValue) -> {
-				if (newValue) {
-					radio.setStyle("-fx-text-fill: yellow; -fx-font-size: 14px;"); // Destaque visual
-				} else {
-					radio.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
-				}
-			});
-			containerAlternativas.getChildren().add(radio);
 		}
 	}
 

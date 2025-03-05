@@ -98,6 +98,7 @@ public class Main extends Application {
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle(titulo);
+			stage.sizeToScene();
 			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();

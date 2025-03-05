@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30px; -fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/231" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SelecaoSimuladoViewController">
+<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30px; -fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SelecaoSimuladoViewController">
 
     <!-- Título -->
     <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;" text="Selecione o Simulado" />
