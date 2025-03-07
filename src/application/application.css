@@ -1,1 +1,71 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* Estilos Gerais */
+.tempo-label {
+	-fx-font-size: 18.0px;
+	-fx-font-weight: bold;
+	-fx-text-fill: #d32f2f;
+}
+
+.mensagem-label {
+	-fx-font-size: 14.0px;
+	-fx-text-fill: red;
+}
+
+/* Alternativas */
+.alternativas-titulo {
+	-fx-font-size: 16.0px;
+	-fx-font-weight: bold;
+	-fx-text-fill: #2d2d2d;
+}
+
+.alternativa-radio {
+	-fx-font-size: 14.0px;
+	-fx-text-fill: #333333;
+	-fx-padding: 8.0px 15.0px;
+	-fx-background-radius: 5.0px;
+	-fx-border-radius: 5.0px;
+	-fx-border-color: #cccccc;
+	-fx-background-color: #ffffff;
+}
+
+.alternativa-radio:hover {
+	-fx-background-color: #f0f0f0;
+}
+
+.alternativa-radio:selected {
+	-fx-background-color: #e3f2fd;
+	-fx-border-color: #2196f3;
+	-fx-text-fill: #1976d2;
+}
+
+/* Botões */
+.botao-confirma {
+	-fx-background-color: #4CAF50;
+	-fx-text-fill: white;
+	-fx-font-size: 16.0px;
+	-fx-pref-width: 220.0px;
+	-fx-padding: 12.0px;
+	-fx-background-radius: 10.0px;
+}
+
+.botao-proxima {
+	-fx-background-color: #ff5252;
+	-fx-text-fill: white;
+	-fx-font-size: 14.0px;
+	-fx-pref-width: 100.0px;
+	-fx-padding: 10.0px;
+	-fx-background-radius: 5.0px;
+}
+
+.botao-sair {
+	-fx-background-color: #616161;
+	-fx-text-fill: white;
+	-fx-font-size: 14.0px;
+	-fx-pref-width: 120.0px;
+	-fx-padding: 10.0px;
+	-fx-background-radius: 5.0px;
+}
+
+.botao-confirma:hover, .botao-proxima:hover, .botao-sair:hover {
+	-fx-effect: dropshadow(three-pass-box, rgba(0.0, 0.0, 0.0, 0.2), 6.0, 0.0, 0.0, 2.0);
+}

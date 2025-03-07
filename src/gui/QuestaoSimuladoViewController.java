@@ -11,6 +11,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,7 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Questao;
@@ -31,24 +32,8 @@ import model.dao.SimuladoDAO;
 
 public class QuestaoSimuladoViewController implements MainAppAware {
 
-	// Campos da interface
 	@FXML
-	private GridPane gride;
-
-	@FXML
-	private RadioButton alternativaA;
-
-	@FXML
-	private RadioButton alternativaB;
-
-	@FXML
-	private RadioButton alternativaC;
-
-	@FXML
-	private RadioButton alternativaD;
-
-	@FXML
-	private RadioButton alternativaE;
+	private RadioButton alternativaA, alternativaB, alternativaC, alternativaD, alternativaE;
 
 	@FXML
 	private Button btConfirma;
@@ -63,13 +48,15 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 	private Label labelTempo; // Exibe o tempo restante
 
 	@FXML
-	private ScrollPane containerAlternativas; // Contém as alternativas (A, B, C, D, E)
+	private ScrollPane containerImagem; // ScrollPane para exibir as imagens
 
 	@FXML
 	private Label labelMensagem; // Exibe mensagens de feedback ao usuário
 
 	@FXML
-	private ImageView imagemQuestao;
+	private VBox contentVBox; // VBox dentro do ScrollPane para as imagens
+	@FXML
+	private VBox alternativasContainer; // Contêiner para as alternativas
 
 	// Dependências
 	private Main mainApp; // Referência para a aplicação principal
@@ -124,7 +111,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 			this.simulado = new Simulado(); // Criando um simulado vazio por padrão
 			this.questoes = new ArrayList<>(); // Evita NullPointerException
 		}
-		gride.getChildren().clear(); // Limpa o GridPane
+		// gride.getChildren().clear(); // Limpa o GridPane
 		labelMensagem.setText(""); // Inicializa a mensagem como vazia
 
 		grupoAlternativas = new ToggleGroup();
@@ -142,7 +129,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 		// Adiciona listeners para mudar o estilo quando selecionado
 		grupoAlternativas.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
 			if (newVal != null) {
-				((RadioButton) newVal).setStyle("-fx-text-fill: yellow; -fx-font-size: 14px;");
+				((RadioButton) newVal).setStyle("-fx-text-fill: blue; -fx-font-size: 14px;");
 			}
 			if (oldVal != null) {
 				((RadioButton) oldVal).setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
@@ -193,13 +180,13 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 		}
 
 		Questao questao = simulado.getQuestaoAtual();
+
 		if (questao == null) {
 			exibirMensagem("Erro: Nenhuma questão disponível.");
 			return;
 		}
 
-		// Limpa as alternativas anteriores
-		gride.getChildren().clear(); // Limpa o GridPane
+        contentVBox.getChildren().clear();
 
 		// Divide os caminhos das imagens
 		String[] imagens = questao.getImagemQuestao().split(";");
@@ -218,7 +205,7 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 
 				// Exibe a imagem no container
 				ImageView imageView = criarImageView(img, 600, true);
-				gride.getChildren().add(imageView); // Adiciona ao GridPane
+				contentVBox.getChildren().add(imageView); // Adiciona ao VBox
 			} catch (Exception e) {
 				exibirMensagem("Erro ao carregar a imagem: " + imagem);
 				exibirImagemPadrao();
@@ -250,8 +237,8 @@ public class QuestaoSimuladoViewController implements MainAppAware {
 		try {
 			Image imagemPadrao = carregarImagem(IMAGEM_PADRAO_PATH);
 			ImageView imageView = criarImageView(imagemPadrao, 200, true);
-			gride.getChildren().add(imageView); // Adiciona ao GridPane
-		} catch (Exception e) {
+            contentVBox.getChildren().add(imageView); // Adiciona ao VBox
+            } catch (Exception e) {
 			exibirMensagem("Erro ao carregar a imagem padrão.");
 		}
 	}

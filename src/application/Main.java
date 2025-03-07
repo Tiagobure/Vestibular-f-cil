@@ -90,6 +90,7 @@ public class Main extends Application {
 					if (questoesObj instanceof List<?>) {
 						List<Questao> questoes = (List<Questao>) questoesObj; // Cast seguro
 						simuladoController.setSimulado(simulado, questoes);
+						
 					} else {
 						throw new IllegalArgumentException("O parâmetro 'questoes' não é uma List<Questao>.");
 					}
@@ -98,6 +99,7 @@ public class Main extends Application {
 			Stage stage = new Stage();
 			stage.setScene(new Scene(root));
 			stage.setTitle(titulo);
+	        stage.setMaximized(true);
 			stage.sizeToScene();
 			stage.show();
 		} catch (IOException e) {

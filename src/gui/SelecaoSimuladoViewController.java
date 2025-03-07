@@ -8,7 +8,9 @@ import application.Main;
 import application.MainAppAware;
 import db.DbException;
 import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -47,18 +49,23 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 	}
 
 	@FXML
-	private void iniciarFUVEST() {
+	private void iniciarFUVEST(ActionEvent event) {
 		// Verifica se o questaoDAO não é null antes de continuar
 		if (questaoDAO == null) {
 			exibirErro("Erro ao carregar as questões", "A dependência do QuestaoDAO não foi inicializada.");
 			return;
 		}
 		List<Questao> questoesFUVEST = questaoDAO.listarPorExame("FUVEST");
-		iniciarSimulado("FUVEST", questoesFUVEST);
+
+		if (questoesFUVEST.isEmpty()) {
+			exibirErro("Nenhuma questão encontrada", "Não há questões disponíveis para o exame FUVEST.");
+			return;
+		}
+		iniciarSimulado("FUVEST", questoesFUVEST, event.getSource());
 	}
 
 	@FXML
-	private void iniciarENEM() {
+	private void iniciarENEM(ActionEvent event) {
 		// Verifica se o questaoDAO não é null antes de continuar
 		if (questaoDAO == null) {
 			exibirErro("Erro ao carregar as questões", "A dependência do QuestaoDAO não foi inicializada.");
@@ -71,32 +78,20 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 			return;
 		}
 
-		iniciarSimulado("ENEM", questoesENEM);
+		iniciarSimulado("ENEM", questoesENEM, event.getSource());
 	}
 
 	@FXML
-	private void voltarMenu() {
+	private void voltarMenu(ActionEvent event) {
 		// Obtém o Stage atual
-		Stage stage = (Stage) labelTempo.getScene().getWindow();
-
-		// Cria uma transição de fade-out
-		FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), stage.getScene().getRoot());
-		fadeOut.setFromValue(1.0); // Opacidade inicial (totalmente visível)
-		fadeOut.setToValue(0.0); // Opacidade final (totalmente invisível)
-		fadeOut.setOnFinished(event -> {
-			// Após a transição, carrega a MainView
-			carregarMainView(stage);
-		});
-		fadeOut.play(); // Inicia a transição
+	    fadeOutAndClose((Node) event.getSource(), () -> {
+	        mainApp.carregarTela("/gui/MainView.fxml", "Menu Principal", null);
+	    }); // Inicia a transição
 	}
 
-	private void carregarMainView(Stage stage) {
-		
-		// Usando o mainApp para carregar a tela
-		mainApp.carregarTela("/gui/MainView.fxml", "Menu Principal", null);
-	}
 
-	private void iniciarSimulado(String exame, List<Questao> questoes) {
+
+	private void iniciarSimulado(String exame, List<Questao> questoes, Object source) {
 		if (questoes.isEmpty()) {
 			// Exibe um alerta para o usuário
 			Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -109,20 +104,22 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 
 		// Cria o objeto Simulado
 		Simulado simulado = new Simulado(exame, questoes, 180); // 180 minutos = 2 horas
-		
+
 		// Prepara os parâmetros para a próxima tela
 		Map<String, Object> params = new HashMap<>();
 		params.put("simulado", simulado);
 		params.put("questoes", questoes); // Passa a lista de questões, não o QuestaoDAO
 
-		
-		// Abre a tela de questões do simulado
-		try {
-			mainApp.carregarTela("/gui/QuestaoSimuladoView.fxml", "simulado", params);
-		} catch (DbException e) {
-			e.printStackTrace();
-			exibirErro("Erro ao carregar a tela de questões", e.getMessage());
-		}
+		fadeOutAndClose((Node) source, () -> {
+			// Abre a tela de questões do simulado
+			try {
+				mainApp.carregarTela("/gui/QuestaoSimuladoView.fxml", "simulado", params);
+			} catch (DbException e) {
+				e.printStackTrace();
+				exibirErro("Erro ao carregar a tela de questões", e.getMessage());
+			}
+		});
+
 	}
 
 	// Método auxiliar para exibir erros
@@ -133,4 +130,18 @@ public class SelecaoSimuladoViewController implements MainAppAware {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
+
+	private void fadeOutAndClose(Node node, Runnable onFinished) {
+		Stage stage = (Stage) node.getScene().getWindow();
+        
+		FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.2), stage.getScene().getRoot());
+		fadeOut.setFromValue(1.0);
+		fadeOut.setToValue(0.0);
+		fadeOut.setOnFinished(e -> {
+			onFinished.run(); // Executa a ação após o fade-out
+			stage.close(); // Fecha o stage
+		});
+		fadeOut.play();
+	}
+
 }
